@@ -5,8 +5,8 @@ How to install BlueCourrier
 
 There are several ways to get BlueCourrier :
 
-* From war file : go to the release page and download our prepackaged Alfresco 5.0.d war file (comming soon)
-* Install the extension : go to the release page and download our Alfresco 5.0.d extension file and install them on top of your Alfresco instance. (comming soon)
+* From war file : go to the release page and download our prepackaged Alfresco 5.0.d war file
+* Install the extension : go to the release page and download our Alfresco 5.0.d extension file and install them on top of your Alfresco instance
 * From the source see our [Build instructions](BUILD.md)
 
 When it's done you can get back here and follow the installation instruction.
