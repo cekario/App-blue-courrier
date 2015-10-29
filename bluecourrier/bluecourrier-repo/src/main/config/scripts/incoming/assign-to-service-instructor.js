@@ -15,6 +15,10 @@
 	 */ 
 	function assignTask() {
 		
+		// No instructor, the following code will assign any of the instructor of the contextual service
+		// Activiti Alfresco integration use the authority name to identify the candidate-group
+		task.addCandidateGroup(getInstructorSiteRoleGroup());
+		
 		if (instructorName) {
 			
 			task.setAssignee(instructorName);
@@ -32,10 +36,6 @@
 			return;
 			
 		}
-		
-		// No instructor, the following code will assign any of the instructor of the contextual service
-		// Activiti Alfresco integration use the authority name to identify the candidate-group
-		task.addCandidateGroup(getInstructorSiteRoleGroup());
 		
 	}
 	
@@ -64,7 +64,7 @@
 		
 		var serviceName, siteRoleGroup, siteRoleGroupAuthorityName;
 		
-		serviceName = Yamma.DeliveryUtils.getBPMContextualServiceName();
+		serviceName = task.getVariable('bcinwf_serviceName'); //Yamma.DeliveryUtils.getBPMContextualServiceName();
 		if (!ServicesUtils.isService(serviceName)) {
 			throw new Error("IllegalStateException! The provided service-name '" + serviceName + "' is not a valid service.");
 		}

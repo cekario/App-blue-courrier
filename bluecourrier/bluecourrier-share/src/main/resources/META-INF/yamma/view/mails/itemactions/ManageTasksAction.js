@@ -39,7 +39,9 @@ Ext.define('Yamma.view.mails.itemactions.ManageTasksAction', {
 			store = Ext.create('Ext.data.Store', {
 				fields : [
 		          'id',
-		          'name'
+		          'name',
+		          'description',
+		          'properties'
 				],
 		        proxy: {
 		            type: 'ajax',
@@ -63,28 +65,30 @@ Ext.define('Yamma.view.mails.itemactions.ManageTasksAction', {
 			
 			if (!success) return;
 			
-			var items = Ext.Array.map(records, function(record){
-				
-				var 
-					taskId = record.get('id'),
-					taskName = record.get('name'),
-					def = (
-						Yamma.Constants.WORKFLOW_TASK_DEFINITIONS[taskName] 
-						|| Yamma.Constants.WORKFLOW_TASK_DEFINITIONS['default']
-					)
-				;
-				
-				return ({
-					taskId : taskId,
-					text : def.title,
-					iconCls : def.iconCls,
-					handler : Ext.bind(execute, me, [record])
-				});
-				
-			});
+			var items = Ext.Array.map(records, renderMenuItem);
 			
 			me.setMenu({
 				items : items
+			});
+			
+		}
+		
+		function renderMenuItem(record) {
+			
+			var 
+				taskId = record.get('id'),
+				taskName = record.get('name'),
+				def = (
+					Yamma.Constants.WORKFLOW_TASK_DEFINITIONS[taskName] 
+					|| Yamma.Constants.WORKFLOW_TASK_DEFINITIONS['default']
+				)
+			;
+			
+			return ({
+				taskId : taskId,
+				text : Ext.isFunction(def.renderTitle) ? def.renderTitle(record) : def.title,
+				iconCls : Ext.isFunction(def.renderIconCls) ? def.renderIconCls(record) : def.iconCls,
+				handler : Ext.bind(execute, me, [record])
 			});
 			
 		}
@@ -95,6 +99,7 @@ Ext.define('Yamma.view.mails.itemactions.ManageTasksAction', {
 				taskId = record.getId(),
 				assignToWindow = Ext.create('Yamma.view.windows.AssignToWindow', {
 					taskId : taskId,
+					nodeRef : nodeRef,
 					onSuccess : onSuccess
 				})
 			;

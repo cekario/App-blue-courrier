@@ -38,7 +38,7 @@ Ext.define('Yamma.controller.attachments.AttachmentsViewController', {
 			},
 			
 			'attachmentsview' : {
-				select : this.onAttachmentSelect
+				itemclick : this.onAttachmentSelect
 			}
 			
 		});
@@ -153,7 +153,7 @@ Ext.define('Yamma.controller.attachments.AttachmentsViewController', {
 	
 
 	
-	onAttachmentSelect : function(rowmodel, record, index, eOpts) {
+	onAttachmentSelect : function(grid, record, item, index, eOpts) {
 		
 		var 
 			nodeRef = record.get('nodeRef'),

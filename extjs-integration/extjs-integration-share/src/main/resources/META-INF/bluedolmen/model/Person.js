@@ -73,6 +73,8 @@ Ext.define('Bluedolmen.model.Person', {
 					userName = record.get('userName')
 				;
 				
+				if (value) return value;
+				
 				return (firstName ? firstName + ' ' : '')
 					+ (lastName ? lastName + ' ' : '')
 					+ (lastName || firstName ? ' (' + userName + ')' : '')
@@ -113,6 +115,17 @@ Ext.define('Bluedolmen.model.Person', {
 	
 	isAdmin : function() {
 		return this.get('isAdmin');
+	},
+	
+	isApplicationAdmin : function() {
+		
+		var adminsGroup = Yamma.config.client['application.admins-group'];
+		
+		if (this.isAdmin()) return true;
+		if (!adminsGroup) return false;
+		
+		return this.belongsToGroup('GROUP_' + adminsGroup); /* group-name is the full-name of the authority */
+		
 	},
 	
 	getAvatarUrl : function() {

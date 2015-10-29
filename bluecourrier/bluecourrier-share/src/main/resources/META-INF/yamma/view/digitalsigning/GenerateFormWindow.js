@@ -43,7 +43,23 @@ Ext.define('Yamma.view.digitalsigning.GenerateFormWindow', {
 				xtype : 'textfield',
 				fieldLabel : 'Alias',
 				name : 'alias'
-			}
+			},
+			{
+				/*
+				 * This is a fake field to ensure the form will be POST-ed
+				 * by using application/x-www-form-urlencoded.
+				 * <p>
+				 * Indeed there is a bug (regression) in Alfresco 5.0 preventing
+				 * from a standard form POST-ed request to pass correctly the
+				 * parameters when passing through the Share alfresco proxy.
+				 */
+				xtype : 'filefield',
+				emptyText : this.emptyTextLabel,
+				fieldLabel : '&nbsp',
+				name : 'fake',
+				hidden : true,
+				buttonText : ''
+			}					
 		];
 		
 	},

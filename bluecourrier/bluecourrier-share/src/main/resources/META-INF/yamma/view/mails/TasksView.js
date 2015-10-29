@@ -37,10 +37,10 @@ Ext.define('Yamma.view.mails.TasksView', {
 		'Yamma.view.mails.gridactions.RemoveReply',
   		'Yamma.view.mails.gridactions.CloseProcessing',
   		'Yamma.view.mails.gridactions.RefuseProcessing',
-		'Yamma.view.mails.gridactions.ForwardForValidation',
-		'Yamma.view.mails.gridactions.SendOutbound',
+  		'Yamma.view.mails.gridactions.EndOutgoingProcessing',
 		'Yamma.view.mails.gridactions.ValidateStep',
 		'Yamma.view.mails.gridactions.CertifyDocument',
+		'Yamma.view.mails.gridactions.ApproveDocument',
 		'Yamma.view.mails.gridactions.PrintAsPdf',
 		'Yamma.view.mails.gridactions.MarkAsSent'
 	],
@@ -298,6 +298,21 @@ Ext.define('Yamma.view.mails.TasksView', {
 			
 		});
 		
+		var 
+			defaultSorting = Yamma.config.client['sorting.default.tasks'],
+			sortingProperty, sortingDirection
+		;
+		if (defaultSorting) {
+			defaultSorting = defaultSorting.split('|');
+			sortingProperty = defaultSorting[0];
+			sortingDirection = defaultSorting[1] || 'ASC';
+			if (sortingProperty) {
+				this.storeConfigOptions.sorters = (this.storeConfigOptions.sorters || []).concat({
+					property : sortingProperty,
+					direction : sortingDirection
+				});
+			}
+		}
 		
 	},
 	
@@ -388,8 +403,9 @@ Ext.define('Yamma.view.mails.TasksView', {
 	    return Ext.create('Yamma.view.mails.SortersMenu', {
 	    	itemId : 'sorters-menu',
 	        sorters : [
+               {"property":"bluecourrier:reference", "text":"Reference", "iconCls" : Yamma.view.mails.SortersMenu.KEY_TYPE_ICON.iconCls},
         	   {"property":"cm:name", "text":"Nom", "iconCls" : Yamma.view.mails.SortersMenu.TEXT_TYPE_ICON.iconCls},
-        	   {"property":"cm:title", "text":"Titre", "iconCls" : Yamma.view.mails.SortersMenu.TEXT_TYPE_ICON.iconCls},
+        	   {"property":"bluecourrier:object", "text":"Objet", "iconCls" : Yamma.view.mails.SortersMenu.TEXT_TYPE_ICON.iconCls},
         	   {"property":"cm:created", "text":"Création", "iconCls" : Yamma.view.mails.SortersMenu.DATE_TYPE_ICON.iconCls},
         	   {"property":"cm:modified", "text":"Modification", "iconCls" : Yamma.view.mails.SortersMenu.DATE_TYPE_ICON.iconCls},
         	   {"property":"bluecourrier:deliveryDate", "text":"Arrivée", "iconCls" : Yamma.view.mails.SortersMenu.DATE_TYPE_ICON.iconCls},

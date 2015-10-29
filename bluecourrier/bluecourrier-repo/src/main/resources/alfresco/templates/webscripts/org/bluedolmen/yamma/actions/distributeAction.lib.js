@@ -37,8 +37,7 @@
 		  
 		}),
 		
-		INCOMING_WORKFLOW_ID = 'activiti$incomingDocument',
-		DELIVERY_WORKFLOW_ID = 'activiti$delivery'
+		INCOMING_WORKFLOW_ID = 'activiti$incomingDocument'
 	;
 	
 	
@@ -109,7 +108,10 @@
 					prefix : 'ser',
 					getDisplayName : Utils.Alfresco.getSiteTitle,
 					isValid : function(service) {
-						return ServicesUtils.isService(service.name);
+						return (
+							ServicesUtils.isService(service.name) &&
+							(undefined !== Yamma.DeliveryUtils.ROLE_LABELS[(service.role || '').split('/')[0]])
+						);
 					}
 				},
 				'loc' : {
@@ -829,7 +831,7 @@
 			person = people.getPerson(userName);
 			if (null == person) return;
 			
-			if (false !== config.setUserAccess) _enableAccess(); // For shareWithGroup reuse
+			if (false !== config.setUserAccess) _enableAccess();
 			if (true === config.sendEmail) _sendEmailToUser();
 			if (true === config.followDocument) _followDocument();
 			
@@ -840,12 +842,8 @@
 				
 				var
 					documentContainer = DocumentUtils.getDocumentContainer(document),
-					role = 'Consumer'
+					role = 'col' == config.role ? 'Collaborator' : ConfigUtils.getConfigValue('shares.user.information.default-permission', 'Contributor', 'string')
 				;
-				
-				if ('col' == config.role) {
-					role = 'Collaborator';
-				}
 				
 				documentContainer.setPermission(role, userName);
 				
@@ -922,7 +920,7 @@
 				var
 					documentContainer = DocumentUtils.getDocumentContainer(document),
 					authorityName = Utils.asString(groupNode.properties['cm:authorityName']),
-					role = 'col' == config.role ? 'Collaborator' : 'Consumer'
+					role = 'col' == config.role ? 'Collaborator' : ConfigUtils.getConfigValue('shares.group.information.default-permission', 'Contributor', 'string')
 				;
 				
 				if (!authorityName) return;
@@ -945,6 +943,8 @@
 		},
 		
 		shareWithCollaborationService : function(document, service, config) {
+			
+			var permission = ConfigUtils.getConfigValue('shares.services.collaboration.default-permission', 'Contributor', 'string');
 
 			if (null == service) return;
 			
@@ -955,7 +955,7 @@
 				if (this._checkServiceOngoing(service, document)) return false; 
 			}
 			
-			this._enableServiceRoleAccess(document, service, config.roleGroup); /* Default SiteConsumer */
+			this._enableServiceRoleAccess(document, service, config.roleGroup, permission);
 			
 			return true;
 			
@@ -999,6 +999,8 @@
 		
 		shareWithInformationService : function(document, service, config) {
 			
+			var permission = ConfigUtils.getConfigValue('shares.services.information.default-permission', 'Contributor', 'string'); 
+			
 			if (null == service) return;
 			
 			config = config || {};
@@ -1015,7 +1017,7 @@
 				if (this._checkServiceOngoing(service, document)) return false; 
 			}
 			
-			this._enableServiceRoleAccess(document, service, config.roleGroup); /* Default SiteConsumer */
+			this._enableServiceRoleAccess(document, service, config.roleGroup, permission);
 			_linkToCCBox();				
 			
 			return true;
@@ -1140,7 +1142,9 @@
 			
 			shares = shares || Utils.asString(yammaHelper.getContextualShares());
 			if (shares) {
-				workflow.parameters["bcinwf:shares"] = shares;
+				// Check shares before
+				shares = this.decode(shares, true /* performCheck */);
+				workflow.parameters["bcinwf:shares"] = shares.encode(); // serialized version
 			}
 			
 			workflow.parameters['bcinwf:processKind'] = processKind; // system property

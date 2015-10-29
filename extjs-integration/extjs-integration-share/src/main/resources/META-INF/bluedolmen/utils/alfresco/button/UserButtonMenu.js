@@ -8,6 +8,10 @@ Ext.define('Bluedolmen.utils.alfresco.button.UserButtonMenu', {
 		'Ext.Img'
 	],
 	
+	uses : [
+	     'Bluedolmen.view.windows.UserProfileWindow'
+	],
+	
 	text : Bluedolmen.Alfresco.getCurrentUserName(),
 	icon : Bluedolmen.Constants.getIconDefinition('user_suit').icon, // do not use iconCls since background style is set with '!important' and cannot be invalidated	
 	

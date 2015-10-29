@@ -1,0 +1,20 @@
+--- /home/pajot-b/src/alfresco-services/services/surf-webscripts/tags/5.1/spring-webscripts/spring-webscripts/src/main/java/org/springframework/extensions/webscripts/connector/RemoteClient.java	2015-10-14 11:03:21.767544842 +0200
++++ /home/pajot-b/dev/workspace.yamma-5.0/spring-webscripts/spring-webscripts/src/main/java/org/springframework/extensions/webscripts/connector/RemoteClient.java	2015-10-14 19:14:26.824002502 +0200
+@@ -58,6 +58,7 @@
+ import org.apache.http.client.HttpClient;
+ import org.apache.http.client.RedirectStrategy;
+ import org.apache.http.client.config.RequestConfig;
++import org.apache.http.client.entity.UrlEncodedFormEntity;
+ import org.apache.http.client.methods.HttpDelete;
+ import org.apache.http.client.methods.HttpGet;
+ import org.apache.http.client.methods.HttpHead;
+@@ -1083,6 +1084,9 @@
+                                         params.add(new BasicNameValuePair(key, values[i]));
+                                     }
+                                 }
++                                if (method instanceof HttpEntityEnclosingRequest) {
++                                	((HttpEntityEnclosingRequest) method).setEntity(new UrlEncodedFormEntity(params));
++                                }
+                             }
+                             // ensure that the Content-Length header is not directly proxied - as the underlying
+                             // HttpClient will encode the body as appropriate - cannot assume same as the original client sent

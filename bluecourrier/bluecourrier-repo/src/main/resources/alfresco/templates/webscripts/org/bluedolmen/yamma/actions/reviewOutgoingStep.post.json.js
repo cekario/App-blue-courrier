@@ -9,6 +9,7 @@
 		taskName : 'bcwfoutgoing:Validating',
 		
 		validationChain : null,
+		signingActor : null,
 		action : 'Next',
 		comment : null,
 		
@@ -16,6 +17,7 @@
 
 			{ name : 'action', defaultValue : 'Next' }, 
 			{ name : 'validationChain', checkValue : checkActorsChain },
+			{ name : 'signingActor', checkValue : checkSigningActor },
 			{ name : 'comment' }
 
 		],
@@ -25,6 +27,7 @@
 			Yamma.Actions.TaskDocumentNodeAction.prepare.call(this);
 
 			this.validationChain = Utils.asString(this.parseArgs['validationChain']);
+			this.signingActor = Utils.wrapString(this.parseArgs['signingActor']);
 			this.action = Utils.asString(this.parseArgs['action']);
 			this.comment = Utils.asString(this.parseArgs['comment']);
 
@@ -34,9 +37,10 @@
 
 			workflowUtils.updateTaskProperties(task, {
 				'bcogwf:validationChain' : Utils.String.splitToTrimmedStringArray(this.validationChain),
+				'bcogwf:signingActor' : this.signingActor, // may be empty to be removed
 				'bpm:comment' : this.comment
 			});
-
+			
 			task.endTask(this.action);
 
 		}

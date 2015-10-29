@@ -162,7 +162,7 @@
 				
 				if ('string' == typeof _isExecutable) {
 					// failure
-					this.failureReason = _isExecutable;
+					me.failureReason = _isExecutable;
 				}
 				
 				isExecutable = isExecutable && ( true === _isExecutable );

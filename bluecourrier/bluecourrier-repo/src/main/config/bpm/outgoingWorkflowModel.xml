@@ -175,7 +175,43 @@
 				</property>
 			</properties>
 		</aspect>	
-	
+
+		<aspect name="bcogwf:certifying">
+			<properties>
+				<property name="bcogwf:signingActor">
+					<title>The Signing Actor</title>
+					<description>The (current) actor who is in charge of signing the document</description>
+					<type>d:text</type>
+				</property>
+				<property name="bcogwf:signingRole">
+					<title>The Signing Role</title>
+					<description>The role of the signing actor - certification or approbation</description>
+					<type>d:text</type>
+					<constraints>
+						<constraint name="bcogwf:signingRoleOptions" type="LIST">
+							<parameter name="allowedValues">
+								<list>
+									<value>Certification</value>
+									<value>Approbation</value>
+								</list>
+							</parameter>
+						</constraint>
+					</constraints>
+				</property>
+				<property name="bcogwf:signingChain">
+					<title>Signing Chain</title>
+					<description>The actors who are still pending to sign the document (approbation)</description>
+					<type>d:text</type>
+					<multiple>true</multiple>
+				</property>
+				<property name="bcogwf:signingHistory">
+					<title>History Signing Chain</title>
+					<description>The history of the past events on this signing chain</description>
+					<type>d:text</type>
+					<multiple>true</multiple>
+				</property>
+			</properties>
+		</aspect>	
 	</aspects>
 
 

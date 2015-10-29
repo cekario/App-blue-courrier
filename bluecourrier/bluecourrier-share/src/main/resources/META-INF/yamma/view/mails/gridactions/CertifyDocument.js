@@ -13,7 +13,8 @@ Ext.define('Yamma.view.mails.gridactions.CertifyDocument', {
 	tooltip : 'Certifier le document',
 	actionUrl : 'alfresco://bluedolmen/yamma/certify',
 	
-	taskName : ['bcwfoutgoing:Processing', 'blueparapheur:workflow_VisaEtape'],
+	taskName : ['bcogwf:certifyingTask'],
+	actionName : 'Certify',
 	
 	dialogConfig : {
 	},
@@ -29,7 +30,7 @@ Ext.define('Yamma.view.mails.gridactions.CertifyDocument', {
 		
 		if (!Yamma.utils.SignatureUtils.isFeatureAvailable()) return false;
 		
-		return (isAvailable_ && false === signedBy);
+		return (isAvailable_) && false === signedBy;
 		
 	},		
 	

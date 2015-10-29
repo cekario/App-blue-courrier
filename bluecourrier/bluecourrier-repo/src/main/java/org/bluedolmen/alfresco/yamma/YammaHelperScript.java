@@ -2,6 +2,7 @@ package org.bluedolmen.alfresco.yamma;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.alfresco.repo.jscript.BaseScopableProcessorExtension;
 import org.alfresco.repo.jscript.ScriptNode;
@@ -14,6 +15,7 @@ import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.cmr.security.AuthenticationService;
 import org.alfresco.service.cmr.security.AuthorityService;
+import org.alfresco.service.cmr.security.AuthorityType;
 import org.alfresco.service.cmr.site.SiteInfo;
 import org.alfresco.service.cmr.site.SiteService;
 import org.alfresco.service.cmr.workflow.WorkflowDefinition;
@@ -37,6 +39,7 @@ public class YammaHelperScript extends BaseScopableProcessorExtension {
 	private AuthorityService authorityService;
 	private AuthenticationService authenticationService;
 	private WorkflowService workflowService;
+	private String adminisitratorsGroupName = "ALFRESCO_ADMINISTRATORS";
 	
 	private List<String> cleanedUpWorkflows = Collections.emptyList();
 	
@@ -170,6 +173,24 @@ public class YammaHelperScript extends BaseScopableProcessorExtension {
 		
 	}
 	
+	/**
+	 * Whether the provided user-name is an application administrator
+	 * 
+	 * @param userName
+	 * @return
+	 */
+	public boolean isApplicationAdministrator(String userName) {
+		
+		if (authorityService.isAdminAuthority(userName)) return true;
+		
+		final Set<String> containedAuthorities = authorityService.getContainedAuthorities(AuthorityType.USER, adminisitratorsGroupName, false /* immediate */);
+		return containedAuthorities.contains(userName);
+		
+	}
+	
+	public void setAdministratorsGroupName(String groupName) {
+		this.adminisitratorsGroupName = groupName;
+	}
 	
 	public void setSiteService(SiteService siteService) {
 		this.siteService = siteService;

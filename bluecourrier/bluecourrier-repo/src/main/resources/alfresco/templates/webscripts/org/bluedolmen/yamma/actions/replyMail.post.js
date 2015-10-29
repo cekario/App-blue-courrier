@@ -4,6 +4,8 @@
 ///<import resource="classpath:/alfresco/extension/bluedolmen/yamma/common/outmail-utils.js">
 
 (function() {
+	
+	var fullAuthenticatedUserName = Utils.Alfresco.getFullyAuthenticatedUserName();
 
 	Yamma.Actions.ReplyMailAction = Utils.Object.create(Yamma.Actions.NodeAction, {
 
@@ -76,7 +78,7 @@
 			var repliesContainer = ReplyUtils.getRepliesContainer(node);
 			if (null == repliesContainer) return false;
 			
-			if (! repliesContainer.hasPermission('Write')) return false;
+			if (!repliesContainer.hasPermission('AddChildren')) return false;
 			if (null != this.updatedNode) {
 				return this.updatedNode.hasPermission('Write');
 			}
@@ -105,6 +107,26 @@
 		
 		attachReply : function() {
 			
+			function fixPermissions(replyNode) {
+				
+				var
+					replyContainer = DocumentUtils.getDocumentContainer(replyNode)
+				;
+				
+				/*
+				 * Change reply ownership to avoid the user to be able to
+				 * change the comments of the other users
+				 */ 
+				
+				if (null != replyContainer) {
+					replyContainer.setPermission('Collaborator', fullAuthenticatedUserName);
+				}
+				
+				replyNode.owner = 'admin';
+				replyContainer.owner = 'admin';
+				
+			}
+			
 			this.repliesContainer = ReplyUtils.getRepliesContainer(this.node, /* createIfNotExists */ true);
 			
 			var replyNode = (null == this.modelNode) 
@@ -131,6 +153,8 @@
 					replyNode, /* replyNode */
 					null != this.task /* omitHistoryEvent */
 				);
+				
+				fixPermissions(replyNode);
 				
 				OutgoingMailUtils.startOutgoingWorkflow(replyNode);
 				

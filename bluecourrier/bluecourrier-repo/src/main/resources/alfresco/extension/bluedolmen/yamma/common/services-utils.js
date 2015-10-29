@@ -2,6 +2,20 @@
 	
 	var ADMINISTRATORS_GROUP = '${bluecourrier.administrators-group}';
 	
+	function _isChildGroup(parentGroup, childGroupName) {
+		
+		var members;
+		
+		parentGroup = Utils.isString(parentGroup) ? groups.getGroup(parentGroup) : parentGroup;
+		if (null == parentGroup) return false;
+		
+		members = parentGroup.getChildGroups() || [];
+		return Utils.Array.exists( members, function(authority) {
+			return childGroupName == Utils.asString(authority.shortName); 
+		});
+		
+	}
+	
 	// TODO: Should use the groups JS API instead
 	function _checkGroupIsDirectMember(serviceName, parentRoleName, memberRoleName, memberServiceName) {
 		
@@ -11,17 +25,10 @@
 		
 		var 
 			parentGroupName = ServicesUtils.getSiteRoleGroupName(serviceName, parentRoleName),
-			parentGroup = groups.getGroup(parentGroupName),
-			memberGroupName = ServicesUtils.getSiteRoleGroupName(memberServiceName, memberRoleName),
-			members
+			memberGroupName = ServicesUtils.getSiteRoleGroupName(memberServiceName, memberRoleName)
 		;
 		
-		if (null == parentGroup) return false;
-		
-		members = parentGroup.getChildGroups() || [];
-		return Utils.Array.exists( members, function(authority) {
-			return memberGroupName == Utils.asString(authority.shortName); 
-		});
+		return _isChildGroup(parentGroupName, memberGroupName);
 		
 	};
 	
@@ -205,11 +212,12 @@
 			function addAdminsitratorsGroup() {
 				
 				var 
-					siteManagerGroupName = 'GROUP_site_' + serviceName + '_' + 'SiteManager',
+					siteManagerGroupName = 'site_' + serviceName + '_' + 'SiteManager',
 					siteManagerGroup = groups.getGroup(siteManagerGroupName)
 				;
 				
 				if (null == siteManagerGroup) return;
+				if ( _isChildGroup(siteManagerGroup, ADMINISTRATORS_GROUP) ) return; 
 				
 				siteManagerGroup.addAuthority('GROUP_' + ADMINISTRATORS_GROUP);
 				

@@ -17,14 +17,23 @@ if [ -e "${ROOT_DIR}/pom.xml" ]; then
 	${MAVEN} -N clean install
 fi
 
-PROJECTS=("${DEPENDENCY_PROJECTS[@]}" "${REPO_PROJECTS[@]}" "${SHARE_PROJECTS[@]}")
+# Dependency project are installed without recursion too
+for project in "${DEPENDENCY_PROJECTS[@]}"; do
+
+	test ! -d ${project} && continue
+	cd "${project}"
+	${MAVEN} -N ${MVN_OPTS} clean install || exit_with_failure "Error while building dependency-project $(basename "${project}")"
+
+done
+
+PROJECTS=("${REPO_PROJECTS[@]}" "${SHARE_PROJECTS[@]}" "${EXTRA_WEBAPPS_PROJECTS[@]}")
 
 for project in "${PROJECTS[@]}"; do
 
 	test ! -d ${project} && continue
 	cd "${project}"
 	# TODO: be less intrusive by using clean package when it is sufficient
-	${MAVEN} ${MVN_OPTS} clean install || exit_with_failure "Error while building $(basename "${project}")"
+	${MAVEN} ${MVN_OPTS} clean package || exit_with_failure "Error while building $(basename "${project}")"
 
 done
 
@@ -59,10 +68,21 @@ for project in "${SHARE_PROJECTS[@]}"; do
 done
 
 #########################################################
+# EXTRA WEBAPPS PROJECTS
+#########################################################
+
+for project in "${EXTRA_WEBAPPS_PROJECTS[@]}"; do
+	cp "${project}"/target/*.war "${TARGET}" || exit_with_failure "Cannot find war files in $(basename "${project}")"
+done
+
+
+#########################################################
 # PACKAGING
 #########################################################
 
 cd ${TARGET}/.. # parent of webapps
+# WARN! It cannot work if the version is inherited, we should use something like:
+# mvn -q -Doutput=/dev/stdout help:effective-pom | xpath -q -e '/project/version/text()'
 VERSION="$(${XPATH} -q -e '/project/version/text()' ${ROOT_DIR}/pom.xml)"
 archive_file="webapps-${PRODUCT_NAME}-${VERSION:-${TODAY}}${SVNREV:+-}${SVNREV}.tar.gz"
 

@@ -22,21 +22,32 @@
 		
 	}
 	
+	function checkSigningActor(actor) {
+		
+		if (!actor) return;
+		
+		if (null == people.getPerson(actor)) {
+			return "Actor '" + actor + "' is not a valid Alfresco username";
+		}
+		
+	}
+	
 	Yamma.Actions.SendOutboundTaskAction = Utils.Object.create(Yamma.Actions.TaskDocumentNodeAction, {
 		
-		taskName : 'bcwfoutgoing:Processing',
+		taskName : 'bcogwf:processingTask',
 		
 		eventType : 'send-outbound',
 		sendByMail : false, /* boolean */ // whether the reply will be sent by mail on the sending step
 		skipValidation : false,
 		actorsChain : null,
+		signingActor : null,
 		
 		wsArguments : [
 		               
 			{ name : 'sendByMail', defaultValue : 'true' }, 
 			{ name : 'skipValidation', defaultValue : 'false' },
-			{ name : 'actorsChain', checkValue : checkActorsChain }
-			
+			{ name : 'actorsChain', checkValue : checkActorsChain },
+			{ name : 'signingActor', checkValue : checkSigningActor }
 		],
 		
 		prepare : function() {
@@ -48,6 +59,7 @@
 			this.eventType = this.eventType + '!' + (this.skipValidation ? 'sendOut' : 'sendToValidation');
 			
 			this.actorsChain = Utils.asString(this.parseArgs['actorsChain']);
+			this.signingActor = Utils.wrapString(this.parseArgs['signingActor']);
 			
 		},		
 		
@@ -56,16 +68,22 @@
 			this.fixWritingDate();
 			this.manageSendByMail();
 			
-			var transitionName = (this.skipValidation === true) ?
+			var transitionName = (this.skipValidation === true || !this.actorsChain) ?
 				'Send Without Validation' :  'Validate';
 			
-			if (null != this.actorsChain) {
+			if (this.actorsChain) {
 				
 				// TODO: do something to inject the value in the workflow
 				workflowUtils.updateTaskProperties(task, {
 					'bcogwf:validationChain' : Utils.String.splitToTrimmedStringArray(this.actorsChain)
 				});
 
+			}
+			
+			if (this.signingActor) {
+				workflowUtils.updateTaskProperties(task, {
+					'bcogwf:signingActor' : this.signingActor
+				});
 			}
 			
 			task.endTask(transitionName);

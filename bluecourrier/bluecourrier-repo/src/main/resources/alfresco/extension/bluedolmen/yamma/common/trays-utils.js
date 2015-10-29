@@ -15,6 +15,7 @@
 				name : 'Inbox',
 				kind : YammaModel.TRAY_KIND_INBOX,
 				permissions : {
+					'SiteManager' : 'SiteManager',
 					'ServiceManager' : 'SiteCollaborator',
 					'ServiceAssistant' : 'SiteCollaborator',
 					'ServiceInstructor' : 'SiteContributor',
@@ -26,6 +27,7 @@
 				name : 'Outbox',
 				kind : YammaModel.TRAY_KIND_OUTBOX,
 				permissions : {
+					'SiteManager' : 'SiteManager',
 					'ServiceManager' : 'SiteCollaborator',
 					'ServiceAssistant' : 'SiteCollaborator',
 					'ServiceInstructor' : 'SiteContributor',
@@ -37,6 +39,7 @@
 				name : 'Copies',
 				kind : YammaModel.TRAY_KIND_CCBOX,
 				permissions : {
+					'SiteManager' : 'SiteManager',
 					'ServiceManager' : 'SiteCollaborator',
 					'ServiceAssistant' : 'SiteCollaborator',
 					'ServiceInstructor' : 'SiteConsumer',
@@ -281,8 +284,8 @@
 			removeEmptyTray(trayPrefixedName);
 		}
 		
+		traysNode.removeAspect('sys:undeletable'); // remove the undeletable aspect anyway
 		if (0 == traysNode.children.length) {
-			traysNode.removeAspect('sys:undeletable');
 			traysNode.remove();
 		}
 		

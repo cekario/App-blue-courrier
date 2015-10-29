@@ -6,22 +6,26 @@ Ext.define('Yamma.view.mails.itemactions.RestartProcessingAction', {
 	
 	iconCls : Yamma.Constants.getIconDefinition('pencil_go').iconCls,
 	
-	isAvailable : function(record) {
+	isAvailable : function(record, currentUser) {
 		
 		var 
-			processedBy = record.get(Yamma.utils.datasources.Documents.PROCESSED_BY_QNAME),
 			state = record.get(Yamma.utils.datasources.Documents.STATUSABLE_STATE_QNAME),
-			enclosingServiceName = record.get(Yamma.utils.datasources.Documents.ENCLOSING_SERVICE)
+			enclosingServiceName = record.get(Yamma.utils.datasources.Documents.ENCLOSING_SERVICE),
+			mailKind = record.get(Yamma.utils.datasources.Documents.MAIL_KIND_QNAME),
+			enclosingService, membership
 		;
 		
 		if ('processed' != state) return false;
+		if (Yamma.utils.datasources.Documents.INCOMING_MAIL_KIND != mailKind) return false;
 		
-		if (Bluedolmen.Alfresco.getCurrentUserName() == processedBy) return true;
+		if (currentUser && currentUser.isApplicationAdmin()) return true;
 		
-		var enclosingService = Yamma.utils.ServicesManager.getDescription(enclosingServiceName);
+		enclosingService = Yamma.utils.ServicesManager.getDescription(enclosingServiceName);
 		if (null == enclosingService) return false;
 		
-		return enclosingService.membership && true == enclosingService.membership.ServiceManager;
+		membership = enclosingService.get('membership') || {};
+		
+		return (true === membership.ServiceAssistant);
 		
 	},
 	

@@ -4,7 +4,8 @@
 	
 	BPMUtils.copyExecutionVariablesToTask([
    	    'bcogwf_validationChain',
-   	    'bcogwf_validationHistory'
+   	    'bcogwf_validationHistory',
+	    'bcogwf_signingActor'   	    
     ]);	
 	
 })();

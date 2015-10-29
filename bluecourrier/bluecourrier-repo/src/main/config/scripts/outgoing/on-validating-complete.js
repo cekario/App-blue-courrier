@@ -15,7 +15,8 @@
 	updateHistory();
 	
 	BPMUtils.copyTaskVariablesToExecution([
-   	    'bcogwf_validationChain'
+   	    'bcogwf_validationChain',
+	    'bcogwf_signingActor'   	    
 //   	    'bcogwf_validationHistory' // Execution is set by updateValidationHistory
    	]);
 	
@@ -29,8 +30,6 @@
 	
 	function updateHistory() {
 		
-		Utils.Debug.breakWithException();
-		
 		var args = [], comment, validationChain, taskValidationChain, extraMessage = '';
 		
 		comment = Utils.asString(task.getVariable('bpm_comment'));
@@ -40,9 +39,15 @@
 		taskValidationChain = Utils.toArray(task.getVariable('bcogwf_validationChain'));
 		
 		if (Utils.asString(validationChain) != Utils.asString(taskValidationChain)) { // Q&D test
-			extraMessage = '\nProchains acteurs en validation: ' + ( Utils.Array.map(Utils.toArray(taskValidationChain), function(authority) {
-				return Utils.Alfresco.getPersonDisplayName(authority);
-			}).join(',') || 'Aucun' );
+			extraMessage = '\n';
+			extraMessage += Utils.Alfresco.getMessage(
+				'yamma.actions.validation.chain',
+				[
+					( Utils.Array.map(Utils.toArray(taskValidationChain), function(authority) {
+						return Utils.Alfresco.getPersonDisplayName(authority);
+					}).join(',') || 'Aucun' )
+				]
+			);
 		}
 		args.push(extraMessage);
 		

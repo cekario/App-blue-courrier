@@ -18,8 +18,14 @@ Ext.define('Bluedolmen.utils.alfresco.grid.ConfirmedAction', {
 			title : this.confirmTitle,
 			msg : this.confirmMessage,
 			onConfirmation : function() {
+				
 				var params = ['preparationReady'].concat(Ext.Array.slice(args));
 				me.fireEvent.apply(me, params);
+				
+				if (null != me.dialog) {
+					me.dialog.close();
+				}
+				
 			}
 		});
 		

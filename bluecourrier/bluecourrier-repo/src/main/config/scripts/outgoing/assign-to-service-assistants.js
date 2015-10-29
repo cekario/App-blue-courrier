@@ -32,7 +32,7 @@
 		if (null == siteRoleGroupAuthorityName) return null;
 		
 		// Activiti Alfresco integration use the authority name to identify the candidate-group
-		logger.warn('Assigning task to ' + siteRoleGroupAuthorityName);
+//		logger.debug('Assigning task to ' + siteRoleGroupAuthorityName);
 		task.addCandidateGroup(siteRoleGroupAuthorityName);
 		
 	}

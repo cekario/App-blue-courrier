@@ -27,8 +27,8 @@
 	<properties>
 		<bluecourrier.config-sitename>bluecourrier</bluecourrier.config-sitename>
 		<bluecourrier.administrators-group>BLUECOURRIER_ADMINISTRATORS</bluecourrier.administrators-group>
-		<bluecourrier.wf.incoming.version>1.0</bluecourrier.wf.incoming.version>
-		<bluecourrier.wf.outgoing.version>1.0</bluecourrier.wf.outgoing.version>
+		<bluecourrier.wf.incoming.version>1.0.4</bluecourrier.wf.incoming.version>
+		<bluecourrier.wf.outgoing.version>1.0.2</bluecourrier.wf.outgoing.version>
 	</properties>
 
 	<packaging>amp</packaging>

@@ -145,7 +145,6 @@
 //				restrictPermission();
 
 				// Start the incoming workflow
-//				IncomingMailUtils.startIncomingWorkflow(document);
 				Yamma.DeliveryUtils.startIncomingWorkflow(document);
 				
 			}

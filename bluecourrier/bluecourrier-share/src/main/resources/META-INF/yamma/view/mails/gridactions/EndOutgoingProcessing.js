@@ -1,13 +1,21 @@
-Ext.define('Yamma.view.mails.gridactions.ForwardForValidation', {
+Ext.define('Yamma.view.mails.gridactions.EndOutgoingProcessing', {
 	
 	extend : 'Yamma.view.mails.gridactions.SimpleTaskRefGridAction',
 	
+	mixins : {
+		confirmedAction : 'Bluedolmen.utils.alfresco.grid.ConfirmedAction'
+	},		
+	
 	icon : Yamma.Constants.getIconDefinition('tick_go').icon,
-	tooltip : 'Transmettre pour validation',
+	tooltip : 'Terminer le traitement',
 	actionUrl : 'alfresco://bluedolmen/yamma/send-outbound',
 
 	taskName : 'bcogwf:processingTask',
-	actionName : 'Validate',
+//	actionName : 'Validate',
+	
+	confirmTitle : "Envoyer sans validation ?",
+	confirmMessage : "Le(s) document(s) va(vont) être envoyé(s) sans la validation d'une personne accréditée.</br>" +
+		"Confirmez-vous l'envoi ?",
 	
 	supportBatchedNodes : true,	
 	
@@ -28,17 +36,29 @@ Ext.define('Yamma.view.mails.gridactions.ForwardForValidation', {
 			
 			extend : 'Yamma.view.dialogs.InitOutgoingValidationDialog',
 			
+			title : 'Terminer le traitement',
+			
 			nodeRef : nodeRef,
 			certifiable : true,
 			
 			launch : function launch() {
-				me.fireEvent('preparationReady', records);
-				me.dialog.close();
+				
+				var actorsStore = this.actorsGrid.getStore();
+				if (null != actorsStore && actorsStore.getCount() == 0) {
+					me.mixins.confirmedAction.askConfirmation.call(me, records, {});
+				}
+				else {
+					me.fireEvent('preparationReady', records);
+					me.dialog.close();
+				}
+				
 			}
 		
 		}, function() {
+			
 			me.dialog = new this();
 			me.dialog.show();
+			
 		});
 		
 	},	
@@ -57,11 +77,15 @@ Ext.define('Yamma.view.mails.gridactions.ForwardForValidation', {
 			signingActor = this.dialog.getSigningActor()
 		;
 		
-		return (Ext.apply({
-			actorsChain : actorsChain,
-			skipValidation : false,
-			signingActor : signingActor
-		}, preparationContext));
+		preparationContext = Ext.apply({
+			actorsChain : actorsChain
+		}, preparationContext);
+		
+		if (signingActor) {
+			preparationContext.signingActor = signingActor;
+		}
+		
+		return preparationContext;
 		
 	}	
 	

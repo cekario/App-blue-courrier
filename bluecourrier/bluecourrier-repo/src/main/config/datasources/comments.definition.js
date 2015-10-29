@@ -1,6 +1,10 @@
 (function() {
 	
-	var UNKNOWN_AUTHOR = '(inconnu)'
+	var 
+		UNKNOWN_AUTHOR = '(inconnu)',
+		fullyAuthenticatedUserName = Utils.Alfresco.getFullyAuthenticatedUserName()
+	;
+	
 
 	DatasourceDefinitions.register('Comments',
 		{
@@ -64,9 +68,15 @@
 					type : 'object',
 					evaluate : function(node) {
 						
+						var
+							canEditComment = fullyAuthenticatedUserName == Utils.asString(node.owner) 
+								|| fullyAuthenticatedUserName == Utils.asString(node.properties['cm:creator']) 
+								|| node.hasPermission("SiteManager") || node.hasPermission("Coordinator")
+	                    ;
+						
 						return ({
 							
-							"edit" : node.hasPermission('Write'),
+							"edit" : canEditComment,
 							"delete" : node.hasPermission('Delete'),
 							"inherits" : node.inheritsPermissions(),
 							"private-authorities" : Utils.Array.map(bdNodeUtils.comments.getPrivateDeclaredAuthorities(node), function(authority) {

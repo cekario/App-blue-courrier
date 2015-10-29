@@ -36,6 +36,7 @@ Ext.define('Yamma.view.mails.gridactions.ValidateStep', {
 			taskRef : task.id,
 			taskName : thisAction.taskName,
 			nodeRef : nodeRef,
+			certifiable : true,
 			
 			performOperation : function(action) {
 				
@@ -48,8 +49,13 @@ Ext.define('Yamma.view.mails.gridactions.ValidateStep', {
 						action : action,
 						comment : me.propertiesForm.getValues()['comment']
 					},
-					url = Bluedolmen.Alfresco.resolveAlfrescoProtocol(thisAction.actionUrl)
+					url = Bluedolmen.Alfresco.resolveAlfrescoProtocol(thisAction.actionUrl),
+					signingActor = this.getSigningActor()
 				;
+				
+				if (signingActor) {
+					values.signingActor = signingActor;
+				}
 				
 				me.setLoading(true);
 				

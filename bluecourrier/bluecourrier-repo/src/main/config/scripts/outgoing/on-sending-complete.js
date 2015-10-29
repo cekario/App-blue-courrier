@@ -7,4 +7,9 @@
 	
 	DocumentUtils.setDocumentState(document, 'processed');
 	
+	HistoryUtils.addEvent(document, {
+		eventType : 'sent-outbound', 
+		key : 'yamma.actions.markAsSent.comment'
+	});
+	
 })();

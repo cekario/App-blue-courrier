@@ -103,7 +103,9 @@
 				<value>activiti$outgoingDocument</value>
 			</list>
 		</property>
-		
+		<property name="administratorsGroupName">
+			<value>GROUP_${bluecourrier.administrators-group}</value>
+		</property>
 	</bean>
 	
 	<!-- HELPERS / UTILS -->

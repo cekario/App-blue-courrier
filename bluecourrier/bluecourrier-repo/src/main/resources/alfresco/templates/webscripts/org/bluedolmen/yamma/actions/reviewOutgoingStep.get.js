@@ -18,7 +18,12 @@
 			
 			function valueAdapter(value, propertyName) {
 				
-				if ('{http://www.bluedolmen.org/model/bcoutgoingworkflow/1.0}validationChain' == Utils.asString(propertyName)){
+				propertyName = Utils.asString(propertyName);
+				
+				if (
+					'{http://www.bluedolmen.org/model/bcoutgoingworkflow/1.0}validationChain' == propertyName ||
+					'{http://www.bluedolmen.org/model/bcoutgoingworkflow/1.0}signingChain' == propertyName
+				){
 					if (!value) return [];
 					return Utils.Array.map(Utils.toArray(value), function(user) {
 						return {
@@ -28,7 +33,10 @@
 					});
 				}
 
-				if ('{http://www.bluedolmen.org/model/bcoutgoingworkflow/1.0}validationHistory' == Utils.asString(propertyName)){
+				if (
+						'{http://www.bluedolmen.org/model/bcoutgoingworkflow/1.0}validationHistory' == propertyName ||
+						'{http://www.bluedolmen.org/model/bcoutgoingworkflow/1.0}signingHistory' == propertyName
+				){
 					if (!value) return [];
 					return Utils.Array.map(Utils.toArray(value), function(event) {
 						
@@ -47,6 +55,14 @@
 					
 				}
 
+				if ('{http://www.bluedolmen.org/model/bcoutgoingworkflow/1.0}signingActor' == propertyName){
+					if (!value) return '';
+					return {
+						id : Utils.asString(value),
+						displayName : Utils.Alfresco.getPersonDisplayName(value)
+					}
+				}
+				
 				return Utils.asString(value);
 				
 			}

@@ -105,20 +105,15 @@
 					
 				},
 				
-//				{
-//					name : YammaModel.MAIL_OBJECT_PROPNAME,
-//					label : 'Objet'
-//				},
-				
 				{
 					name : 'instructor',
 					label : 'Instructeur',
 					evaluate : function(node) {
 						
-						var processingEvents = HistoryUtils.getHistoryEvents(node, 'acceptProcessing');
-						if (Utils.isArrayEmpty(processingEvents)) return '';
+						var instructorName = Utils.asString(node.properties['bcinwf:instructorUserName']);
+						if (!instructorName) return '';
 						
-						return processingEvents[0].properties[YammaModel.EVENT_REFERRER_PROPNAME];
+						return Utils.Alfresco.getPersonDisplayName(instructorName, false /* displayUserName */) + '|' + instructorName;
 						
 					}
 				},

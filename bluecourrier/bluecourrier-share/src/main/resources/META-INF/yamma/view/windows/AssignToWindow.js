@@ -10,18 +10,22 @@ Ext.define('Yamma.view.windows.AssignToWindow', {
 	},
 	
 	title : '(Ré)assigner une tâche',
-	layout : 'fit',
+	layout : 'border',
 	
 	height : 400,
-    width : 400,
+    width : 800,
+    
+    showAssign : true,
+    showRelease : true,
+    nodeRef : null,
     
     config : {
     	taskId : null
     },
 	
 	defaults : {
-		width : '100%',
-		margin : '10'
+		height : '100%',
+		margin : '5'
 	},
 	
 	initComponent : function() {
@@ -44,6 +48,7 @@ Ext.define('Yamma.view.windows.AssignToWindow', {
 				iconCls : Yamma.Constants.getIconDefinition('link').iconCls,
 				handler : this.onAssignClick,
 				disabled : true,
+				hidden : !this.showAssign,
 				scope : this
 				
 			},
@@ -54,6 +59,7 @@ Ext.define('Yamma.view.windows.AssignToWindow', {
 				iconCls : Yamma.Constants.getIconDefinition('link').iconCls,
 				handler : this.onReleaseClick,
 				disabled : true,
+				hidden : !this.showRelease,
 				scope : this
 				
 			},
@@ -132,6 +138,7 @@ Ext.define('Yamma.view.windows.AssignToWindow', {
 				title : 'Tâche affectée à',
 				store : availableActorsStore,
 				hideHeaders : true,
+				region : 'center',
 				columns : [
 					{
 						text : 'Utilisateur',
@@ -151,6 +158,7 @@ Ext.define('Yamma.view.windows.AssignToWindow', {
 				
 				listeners : {
 					'selectionchange' : me.updateAvailableButtons,
+					'itemdblclick' : me.onItemDblClick,
 					scope : me
 				},
 				
@@ -166,7 +174,29 @@ Ext.define('Yamma.view.windows.AssignToWindow', {
 			scope : this
 		});
 		
-		return [availableActorsGrid];
+		this.historyView = Ext.create('Yamma.view.history.DocumentHistoryList', {
+			hideHeaders : true,
+			refreshable : false,
+			region : 'east',
+			flex : 2,
+			hidden : !this.nodeRef
+		});
+		
+		if (this.nodeRef) {
+			this.historyView.dload(this.nodeRef);
+		}
+		else {
+			this.width = this.width / 2;
+		}
+		
+		return [ availableActorsGrid, this.historyView ];
+		
+	},
+	
+	onItemDblClick : function(actorsGrid, record, item, index, e, eOpts ) {
+		
+		var userName = record.get('userName');
+		this._performServerRequest('POST', {userName : userName});
 		
 	},
 	

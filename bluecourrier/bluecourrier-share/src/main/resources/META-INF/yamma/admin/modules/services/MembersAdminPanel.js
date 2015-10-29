@@ -361,21 +361,6 @@ Ext.define('Yamma.view.admin.modules.Services.MembersAdminGrid', {
 			xtype: 'alfrescoactioncolumn',
 			
 			items : [
-//				{
-//					icon: Yamma.Constants.getIconDefinition('pencil').icon,
-//					
-//					handler: function(grid, rowIndex, colIndex, actionItem, event, record, row) {
-//						
-//						me._updateAuthority(record);
-//
-//					},
-//					
-//					getClass : function(value, meta, record) {
-//						
-//						return canEdit(record) ? '' : Ext.baseCSSPrefix + 'hide-display';
-//
-//					}
-//				},
 				{
 					icon: Yamma.Constants.getIconDefinition('delete').icon,
 					
@@ -401,53 +386,12 @@ Ext.define('Yamma.view.admin.modules.Services.MembersAdminGrid', {
 		
 	},
 	
-//	_updateAuthority : function(record) {
-//		
-//		var
-//		
-//			me = this,
-//			
-//			nodeRef = record.get('id'),
-//			categoryName = record.get('name'),	
-//			
-//			updateCategoryForm = Ext.create('Yamma.view.categories.UpdateCategoryForm', {
-//				categoryRef : nodeRef,
-//				title : false,
-//				onSuccess : function() {
-//					Ext.Function.defer(function() {me.getStore().load({ node : record.parentNode });});
-//					updateCategoryWindow.close();
-//				}
-//			}),
-//			
-//			form = updateCategoryForm.getForm(),
-//			
-//			updateCategoryWindow = Ext.create('Ext.window.Window', {
-//			
-//				title : 'Mettre à jour une catégorie',
-//				renderTo : Ext.getBody(),
-//				layout : 'fit',
-//				
-//				items : [
-//					updateCategoryForm
-//				]
-//			
-//			})
-//			
-//		;
-//		
-//		form.setValues({
-//			name : categoryName
-//		});
-//		
-//		updateCategoryWindow.show();
-//		
-//	},
-	
 	_removeAuthority : function(record, skipConfirmation) {
 		
 		var 
 			me = this,
-			shortName = record.get('shortName')
+			shortName = record.get('shortName'),
+			authorityType = record.get('authorityType')
 		;
 		
 		if (!shortName) return;
@@ -473,7 +417,7 @@ Ext.define('Yamma.view.admin.modules.Services.MembersAdminGrid', {
  			;
 			
 			url = url.replace(/\/api\//,'/yamma/'); // get the admin-authenticated Bluedolmen equivalent
-			url = url + '/' + shortName;
+			url = url + '/' + ('GROUP' == authorityType ? 'GROUP_' : '') + shortName; // uses fullName here for groups
 			
 			Bluedolmen.Alfresco.jsonRequest(
 				{

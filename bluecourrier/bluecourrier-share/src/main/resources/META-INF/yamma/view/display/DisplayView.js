@@ -110,7 +110,7 @@ Ext.define('Yamma.view.display.DisplayView',
 						border : 0,
 						items : [
 							Ext.apply(parent, {
-								title : ' '
+								title : '&nbsp;'
 							})
 						] 
 					}

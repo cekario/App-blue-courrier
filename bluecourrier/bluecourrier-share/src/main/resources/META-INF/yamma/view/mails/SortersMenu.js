@@ -11,6 +11,7 @@ Ext.define('Yamma.view.mails.SortersMenu', {
 		SORT_DESCENDING_ICON : Yamma.Constants.getIconDefinition('sort_descending'),
 		TEXT_TYPE_ICON : Yamma.Constants.getIconDefinition('text_smallcaps'),
 		DATE_TYPE_ICON : Yamma.Constants.getIconDefinition('date'),
+		KEY_TYPE_ICON : Yamma.Constants.getIconDefinition('key'),
 		DEFAULT_LABEL : 'Trier par'
 			
 	},

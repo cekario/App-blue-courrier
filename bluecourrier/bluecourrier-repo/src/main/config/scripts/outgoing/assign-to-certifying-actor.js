@@ -5,35 +5,23 @@
 (function() {
 	
 	var
-		instructorName = Utils.asString(BPMUtils.getContextVariable('bcogwf_instructor'))
+		signingActor = Utils.asString(BPMUtils.getContextVariable('bcogwf_signingActor'))
 			|| Utils.asString(BPMUtils.getContextVariable('bpm_assignee'))
 	;
 	
 	assignTask();
 	
-	/*
-	 * A delivering task is assigned to the service-assistants of the
-	 * processing service
-	 */ 
 	function assignTask() {
 		
 		var serviceName, siteRoleGroup, siteRoleGroupAuthorityName;
 		
-		task.addCandidateGroup(getInstructorSiteRoleGroup());
+		task.addCandidateGroup(getInstructorSiteRoleGroup()); // Used for re-assignation => Maybe revised w.r.t. real user-stories
 		
-		instructorName = instructorName || getCurrentActorName();
-		
-		if (instructorName) {
-			task.setAssignee(instructorName);
+		if (signingActor) {
+			task.setAssignee(signingActor);
+			return;
 		}
 
-	}
-	
-	function getCurrentActorName() {
-		
-		if ('undefined' == typeof person) return null;
-		return Utils.asString(person.properties['cm:userName']);
-		
 	}
 	
 	function getInstructorSiteRoleGroup() {

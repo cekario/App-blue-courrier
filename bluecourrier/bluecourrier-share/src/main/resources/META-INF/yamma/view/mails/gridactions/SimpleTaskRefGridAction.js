@@ -199,7 +199,7 @@ Ext.define('Yamma.view.mails.gridactions.SimpleTaskRefGridAction', {
 		;
 		
 		this.jsonRequest(
-				Ext.applyIf(dataObj, additionalRequestParameters), 
+				Ext.apply(dataObj, additionalRequestParameters), 
 				null /* scope */, 
 				[preparationContext] /* handlerArgs */
 		);

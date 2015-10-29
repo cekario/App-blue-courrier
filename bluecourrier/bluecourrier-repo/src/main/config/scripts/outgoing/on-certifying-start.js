@@ -2,13 +2,17 @@
 
 (function() {
 	
-	// TODO
-//	BPMUtils.copyExecutionVariablesToTask([
-//   	    'bcinwf_processKind',
-//   	    {
-//  	    	'serviceName': 'bcinwf_serviceName',
-//  	    	'serviceRole': 'bcinwf_serviceRole'
-//   	    }
-//    ]);	
+	// Fix the signing role (to certification) if not yet set
+	var signingRole = Utils.asString(execution.getVariable('bcogwf_signingRole'));
+	if (!signingRole) {
+		execution.setVariableLocal('bcogwf_signingRole', 'certification');
+	}
+	
+	BPMUtils.copyExecutionVariablesToTask([
+  	    'bcogwf_signingActor',   	    
+  	    'bcogwf_signingRole',
+  	    'bcogwf_signingChain',
+  	    'bcogwf_signingHistory'
+   ]);	
 	
 })();

@@ -1,5 +1,6 @@
 ///<import resource="classpath:/alfresco/extension/bluedolmen/yamma/common/yamma-env.js">
 ///<import resource="classpath:/alfresco/templates/webscripts/org/bluedolmen/yamma/actions/nodeaction.lib.js">
+///<import resource="classpath:/alfresco/templates/webscripts/org/bluedolmen/yamma/actions/reviewOutgoing.lib.js">
 
 (function() {
 	
@@ -20,13 +21,17 @@
 		page = Number(page);
 		if (page < 1 ) 'The page has to be a page-number starting from 1';
 	}
-	
-	Yamma.Actions.CertifyDocumentAction = Utils.Object.create(Yamma.Actions.DocumentNodeAction, {
+
+	Yamma.Actions.SignDocumentTaskAction = Utils.Object.create(Yamma.Actions.TaskDocumentNodeAction, {
 		
-		idArg : 'nodeRefs',
+		taskName : 'bcogwf:certifyingTask',
+		
+		signingChain : null,
+		action : 'Certify',
+		comment : null,		
 		
 		eventType : 'certify',
-		
+
 		reason : null,
 		location : null,
 		position : null,
@@ -44,7 +49,10 @@
    			'location',
    			'field-name',
    			{ name: 'password', mandatory : true },
-   			'alias'
+   			'alias',
+			{ name : 'action', defaultValue : 'Certify' },   			
+			{ name : 'signingChain', checkValue : checkActorsChain },
+			{ name : 'comment' }			
    		],
    				
    		prepare : function() {
@@ -72,35 +80,47 @@
    				};
    			}
    			
+			this.action = Utils.asString(this.parseArgs['action']);
+			this.signingChain = Utils.asString(this.parseArgs['signingChain']);
+			this.comment = Utils.asString(this.parseArgs['comment']);
    			
    		},		
-
 		
-		isExecutable : function(node) {
+		doExecute : function(task) {
 			
-			return true;
+			var
+				signingRole = Utils.asString(task.properties['bcogwf:signingRole'])
+			;
 			
-		},
-		
-		doExecute : function(node) {
-		
-			signingUtils.sign(node, {
+			if ('Certify' == this.action) {
 				
-				reason : this.reason,
-				location : this.location,
-				position : this.position,
-				size : this.size,
-				fieldName : this.fieldName,
-				password : this.password,
-				alias : this.alias,
-				pageNumber : this.page
+				signingUtils.sign(node, {
+					
+					reason : this.reason,
+					location : this.location,
+					position : this.position,
+					size : this.size,
+					fieldName : this.fieldName,
+					password : this.password,
+					alias : this.alias,
+					pageNumber : this.page,
+					signatureType : signingRole ? signingRole.toUpperCase() : null
+					
+				});
 				
+			}
+			
+			workflowUtils.updateTaskProperties(task, {
+				'bcogwf:signingChain' : Utils.String.splitToTrimmedStringArray(this.signingChain),
+				'bpm:comment' : this.comment
 			});
 			
+			task.endTask(this.action);
+
 		}
-		
+	
 	});
 
-	Yamma.Actions.CertifyDocumentAction.execute();	
+	Yamma.Actions.SignDocumentTaskAction.execute();
 	
 })();

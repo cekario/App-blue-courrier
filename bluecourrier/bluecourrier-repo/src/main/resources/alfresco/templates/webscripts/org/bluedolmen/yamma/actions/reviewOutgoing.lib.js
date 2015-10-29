@@ -15,3 +15,13 @@ function checkActorsChain(actorsChain) {
 	return message;
 	
 }
+
+function checkSigningActor(actor) {
+	
+	if (!actor) return;
+	
+	if (null == people.getPerson(actor)) {
+		return "Actor '" + actor + "' is not a valid Alfresco username";
+	}
+	
+}

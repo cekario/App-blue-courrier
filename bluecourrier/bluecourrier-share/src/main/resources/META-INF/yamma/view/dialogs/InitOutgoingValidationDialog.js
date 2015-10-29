@@ -8,44 +8,6 @@ Ext.define('Yamma.view.dialogs.InitOutgoingValidationDialog', {
 
 	commentable : false,
 	
-	initComponent : function() {
-		
-		this.callParent();
-		this.propertiesForm.setVisible(false);
-		
-	},
-	
-//	height : 400,
-//	width : 400,
-	
-//	getItemsDefinition : function() {
-//		
-//		var
-//			itemsDefinition = this.callParent()
-//		;
-//		
-//		return [
-//			{
-//				xtype : 'panel',
-//				region : 'center',
-//				layout : 'vbox',
-//				plain : true,
-//			    title: false, //'Chaîne de validation',				
-//				defaults : {
-//					width : '100%',
-//					margin : 0
-//				},
-//				items : [
-//					this.personCombo,
-//					this.actorsGrid
-//				]
-//			}
-//		];		
-//		
-//		return itemDefinitions;
-//		
-//	},
-	
 	/**
 	 * @protected
 	 */
@@ -64,7 +26,7 @@ Ext.define('Yamma.view.dialogs.InitOutgoingValidationDialog', {
 		        { 
 		        	xtype: 'button',
 		        	itemId : 'launch-button',
-		        	text: 'Lancer',
+		        	text: 'Terminer',
 		        	icon : Yamma.Constants.getIconDefinition('tick_go').icon,
 		        	handler : function() {
 						me.launch();
@@ -99,11 +61,8 @@ Ext.define('Yamma.view.dialogs.InitOutgoingValidationDialog', {
 				
 		function canLaunch() {
 			
-			var actorsStore = me.actorsGrid.getStore();
-			if (null == actorsStore) return false;
-			
-			return actorsStore.getCount() > 0;
-			
+			return true;
+						
 		}
 		
 		this._setCanLaunch(canLaunch_);

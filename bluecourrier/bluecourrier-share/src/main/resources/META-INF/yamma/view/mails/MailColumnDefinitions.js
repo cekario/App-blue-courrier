@@ -329,10 +329,10 @@ Ext.define('Yamma.view.mails.MailColumnDefinitions', {
 	
 	SUBJECT_TEMPLATE : new Ext.XTemplate(
 		'<div class="document-subject">',
-		'<div class="{nameClass}"><div class="privacy-extra-cls {addCls}"></div>{name}</div>',
+		'<div class="{nameClass}"><div class="privacy-extra-cls {addCls}"></div><span class="reference">{reference}</span>{name}</div>',
 		'<div class="{objectClass}">{object}</div>',
 		'</div>'
-	),	
+	),
 	
 	getSubjectColumnDefinition : function() {
 		
@@ -351,6 +351,7 @@ Ext.define('Yamma.view.mails.MailColumnDefinitions', {
 							objectClass = object ? 'object' : Ext.baseCSSPrefix + 'hide-display',
 							name = record.get(Yamma.utils.datasources.Documents.DOCUMENT_NAME_QNAME),
 							mimeTypeDefinition = me.getMimeTypeDefinition(record),
+							reference = record.get(Yamma.utils.datasources.Documents.REFERENCEABLE_REFERENCE_QNAME),
 							nameClass = name ? 'name' : Ext.baseCSSPrefix + 'hide-display',
 							addCls = me.getPrivacyAddCls(record),
 							subject = me.SUBJECT_TEMPLATE.applyTemplate({
@@ -362,7 +363,8 @@ Ext.define('Yamma.view.mails.MailColumnDefinitions', {
 										? ' ' + mimeTypeDefinition.iconCls 
 										: ''
 									),
-								name : name
+								name : name,
+								reference : reference ? ('[' + reference + '] ') : ''
 							})
 						;
 					

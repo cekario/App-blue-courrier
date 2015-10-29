@@ -1,17 +1,16 @@
-Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
+Ext.define('Yamma.view.dialogs.OutgoingSigningDialog', {
 
 	extend : 'Ext.window.Window',
-	alias : 'widget.outgoingvalidationdialog',
+	alias : 'widget.outgoingsigningdialog',
 	
 	requires : [
-		'Bluedolmen.store.PersonStore',
-		'Yamma.view.history.DocumentHistoryList'
+		'Bluedolmen.store.PersonStore'
 	],
 	
-	iconCls : Yamma.Constants.getIconDefinition('accept').iconCls,
+	iconCls : Yamma.Constants.getIconDefinition('text_signature').iconCls,
 	
-	title : 'Validation',
-	height : 400,
+	title : 'Validation électronique',
+	height : 500,
 	width : 800,
 	modal : true,
 	
@@ -36,7 +35,7 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 	taskName : null,
 	
 	commentable : true,
-	certifiable : false,
+	modifiable : false,
 
 	/**
 	 * @config
@@ -95,7 +94,7 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 		
 		function loadTaskProperties() {
 			
-			if (null == taskRef || 'bcogwf:validatingTask' != taskName) return;
+			if (null == taskRef) return;
 			
 			var url = Bluedolmen.Alfresco.resolveAlfrescoProtocol('alfresco://bluedolmen/yamma/review-outgoing?taskRef={taskRef}')
 				.replace(/\{taskRef\}/, taskRef)
@@ -116,7 +115,6 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 					;
 					
 					fillValidationChain(taskProperties);
-					fillCertification(taskProperties);
 					
 				},
 				
@@ -131,8 +129,8 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 			function fillValidationChain(taskProperties) {
 				
 				var
-					validationChain = taskProperties['{http://www.bluedolmen.org/model/bcoutgoingworkflow/1.0}validationChain'] || [],
-					validationHistory = taskProperties['{http://www.bluedolmen.org/model/bcoutgoingworkflow/1.0}validationHistory'] || [],
+					validationChain = taskProperties['{http://www.bluedolmen.org/model/bcoutgoingworkflow/1.0}signingChain'] || [],
+					validationHistory = taskProperties['{http://www.bluedolmen.org/model/bcoutgoingworkflow/1.0}signingHistory'] || [],
 					owner = taskProperties['owner']
 				; 
 				
@@ -145,44 +143,16 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 				});
 				actorsStore.firstIndex = validationHistory.length;
 				
-				// Also add current actor
-				if (owner) {
-					actorsStore.add({
-						id : owner.id,
-						title : owner.displayName,
-						decision : 'Ongoing'
-					});
-					actorsStore.firstIndex++;
-				}
-				
 				Ext.Array.forEach(validationChain, function(authority) {
 					actorsStore.add({
 						id : authority.id,
-						title : authority.displayName
+						title : authority.displayName,
+						decision : owner && owner.id == authority.id ? 'Ongoing' : ''
 					});
 				});
 				
 			}
 			
-			function fillCertification(taskProperties) {
-				
-				var
-					signingActor = taskProperties['{http://www.bluedolmen.org/model/bcoutgoingworkflow/1.0}signingActor'] || null,
-					certifyCheckbox = me.propertiesForm.queryById('certify-checkbox'),
-					signerCombo = me.propertiesForm.queryById('signer-combo')
-
-				;
-					
-				if (!signingActor || !signingActor.id) return;
-				
-				signerCombo.setValue(Ext.create('Bluedolmen.model.Person', {
-					userName : signingActor.id,
-					displayName : signingActor.displayName
-				}));
-				certifyCheckbox.setValue(true);
-				
-			}
-						
 		}
 		
 		function isSetAsActor(id) {
@@ -219,7 +189,9 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 	    }
 	    
 	    function isDecisionTaken(record) {
+	    	
 	    	return !!record.get('decision');
+	    	
 	    }
 	    
 		this.actorsGrid = Ext.create('Ext.grid.Panel', {
@@ -267,6 +239,7 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 			                    
 			                	
 			                },
+			                hidden : !me.modifiable,
 							getClass : function(value, meta, record) {
 								
 								if (!isDecisionTaken(record)) return Yamma.Constants.getIconDefinition('arrow_up_lightgreen').iconCls;
@@ -289,6 +262,7 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 			                	store.insert(rowIndex + 1, record);
 			                	
 			                },
+			                hidden : !me.modifiable,
 							getClass : function(value, meta, record) {
 								
 								if (!isDecisionTaken(record)) return Yamma.Constants.getIconDefinition('arrow_down_lightgreen').iconCls;
@@ -302,6 +276,7 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 			                    var record = grid.getStore().getAt(rowIndex);
 			                	removeActorChecked(record);
 			                },
+			                hidden : !me.modifiable,
 							getClass : function(value, meta, record) {
 								
 								if (!isDecisionTaken(record)) return Yamma.Constants.getIconDefinition('delete').iconCls;
@@ -316,6 +291,7 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 			            		var decision = record.get('decision');
 			            		
 			            		if ('Reject' == decision) return Yamma.Constants.getIconDefinition('cross').iconCls;
+			            		else if ('certification' == decision) return Yamma.Constants.getIconDefinition('rosette').iconCls;
 			            		else if ('Next' == decision) return Yamma.Constants.getIconDefinition('accept').iconCls;
 			            		else if ('Ongoing' == decision) return Yamma.Constants.getIconDefinition('hourglass').iconCls;
 			            		
@@ -347,6 +323,8 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 		    labelClsExtra : Yamma.Constants.getIconDefinition('user_add').iconCls,
 		    labelStyle : 'background-repeat:no-repeat ; background-position:center; padding: 1px;',
 		    
+		    hidden : true !== me.modifiable,
+		    
 		    listConfig: {
 				loadingText: 'Recherche...',
 				emptyText: 'Aucun utilisateur trouvé.'		
@@ -376,36 +354,6 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 		    
 		});
 		
-		this.historyView = Ext.create('Yamma.view.history.DocumentHistoryList', {
-			hideHeaders : true,
-			refreshable : false,
-			region : 'east',
-			flex : 1,
-			hidden : !this.nodeRef
-		});
-		
-		if (this.nodeRef) {
-			this.historyView.dload(this.nodeRef);
-		}
-		
-		function assignComboToMe(combo) {
-			
-    		var value;
-    		combo = Ext.isString(combo) ? me.propertiesForm.queryById(combo) : combo;
-			if (!combo) return;
-			
-			var username = Bluedolmen.Alfresco.getCurrentUserName();
-			if (!username) return;
-			
-			combo.store.load({
-				rawQuery : username,
-				callback : function() {
-					combo.select(username);
-				}
-			});
-			
-		}
-		
 		this.propertiesForm = Ext.create('Ext.form.FormPanel', {
 			flex : 0,
 			height : '100px',
@@ -433,93 +381,12 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 				    	}
 				    },
 				    hidden : !this.commentable
-			    },
-			    {
-			    	xtype: 'fieldcontainer',
-			    	fieldLabel : '&nbsp',
-			    	labelWidth : 0,
-			    	layout: 'hbox',
-			    	hidden : !me.certifiable,
-				    defaults : {
-					    fieldLabel: '&nbsp',
-					    labelWidth : 30,
-					    labelSeparator : '',
-					    labelStyle : 'background-repeat:no-repeat ; background-position:center; padding: 1px;',
-				    },
-			    	items : [
-		 			    {
-					    	xtype : 'checkboxfield',
-					    	itemId : 'certify-checkbox',
-					    	boxLabel : 'Certifier',
-					    	name : 'certify',
-					    	checked : false,
-						    labelClsExtra : Yamma.Constants.getIconDefinition('text_signature').iconCls,
-						    listeners : {
-						    	
-						    	'change' : function(checkbox, newValue, oldValue) {
-						    		
-						    		var
-						    			signerCombo = me.propertiesForm.queryById('signer-combo'),
-						    			button = me.propertiesForm.queryById('assignToMe-button'),
-						    			value
-						    		;
-						    		if (!signerCombo) return;
-						    		
-						    		signerCombo.setDisabled(!newValue);
-						    		button.setDisabled(!newValue);
-						    		if (!newValue) return;
-						    		
-						    		value = signerCombo.getValue();
-						    		if (!value) {
-						    			assignComboToMe(signerCombo);
-						    		}
-						    		
-						    	}
-						    	
-						    }
-					    },
-					    {
-					    	xtype : 'combobox',
-					    	itemId : 'signer-combo',
-							minChars : 3,
-							minWidth : 180,
-						    queryMode: 'remote',
-						    queryParam: 'filter',
-						    displayField : 'displayName',
-						    valueField: 'userName',
-						    hideTrigger : true,
-						    grow : true,
-						    labelClsExtra : Yamma.Constants.getIconDefinition('user').iconCls,
-						    disabled : true,
-						    
-						    listConfig: {
-								loadingText: 'Recherche...',
-								emptyText: 'Aucun utilisateur trouvé.'		
-							},
-							
-							store : personStore
-					    },
-					    {
-					    	xtype : 'button',
-					    	itemId : 'assignToMe-button',
-					    	text : "A moi", 
-					    	disabled : true,
-					    	margin : '0 0 0 5px',
-					    	handler : function() {
-					    		
-					    		var signerCombo = me.propertiesForm.queryById('signer-combo');
-					    		if (!signerCombo) return;
-					    		assignComboToMe(signerCombo);
-					    		
-					    	}
-					    }
-			    	]
 			    }
 		    ]
 		});
 		
-		this.propertiesForm.setVisible(this.commentable || this.certifiable);
-		
+		this.propertiesForm.setVisible(this.commentable);
+				
 		return [
 			{
 				xtype : 'panel',
@@ -537,7 +404,18 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 					this.actorsGrid
 				]
 			},
-			this.historyView,
+			{
+				
+				xtype : 'signdocumentpanel',
+				itemId : 'signature-form',
+				title : 'Signature électronique',
+				region : 'east',				
+				nodeRef : me.nodeRef,
+				showPositioning : false,
+				hideButtons : true,
+				flex : 1,
+				border : 1
+			},
 			this.propertiesForm
 		];
 		
@@ -564,7 +442,7 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 		        	text: 'Accepter',
 		        	icon : Yamma.Constants.getIconDefinition('accept').icon,
 		        	handler : function() {
-						this.performOperation('Next');
+						this.performOperation('Certify');
 		        	},
 		        	scope : this
 		        },
@@ -608,20 +486,23 @@ Ext.define('Yamma.view.dialogs.OutgoingValidationDialog', {
 		);
 		
 	},
-		
-	getSigningActor : function() {
+	
+	getSigningInformation : function() {
 		
 		var
-			certifyCheckbox = this.propertiesForm.queryById('certify-checkbox'),
-			signerCombo = this.propertiesForm.queryById('signer-combo')
+			signingPanel = this.queryById('signature-form'),
+			form
 		;
 		
-		if (false === certifyCheckbox.getValue()) return null;
+		if (null == signingPanel) return {};
 		
-		return signerCombo.getValue() || null;
+		form = signingPanel.getForm();
+		if (null == form) return {};
+		
+		return form.getValues();
 		
 	},
-	
+		
 	/**
 	 * Disable the forward button if the operation is not valid w.r.t. the available data
 	 * @private

@@ -5,8 +5,10 @@
  * In future versions, ExtJS may support the customization of the timestamping (_dc),
  * but in the currently used version (4.2.1), this customization is not supported.
  * 
+ * *MUST BE* set before using the ExtJS loader
+ * 
  */
-function overrideLoaderTimestamping() {
+(function overrideLoaderTimestamping() {
 	
 	if (undefined === bluecourrierClientConfig) return;
 	
@@ -29,10 +31,7 @@ function overrideLoaderTimestamping() {
 		
 	}
 	
-}
-
-// MUST BE set before using the ExtJS loader
-overrideLoaderTimestamping(); 
+})();
 
 Ext.Loader.setConfig(
 	{
@@ -73,7 +72,8 @@ Ext.require([
 	
 	'Yaecma.utils.Constants'
 ], function() {
-	Ext.useShims = true;//Ext.isIE;
+	
+	Ext.useShims = true;
 	
 	Bluedolmen.utils.alfresco.config.AppConfigFactory.initConfigs({
 		'bluecourrier.stats' : 'Yamma.config.stats',
@@ -91,7 +91,7 @@ function initApplication() {
 			appFolder : '/share/res/yamma',
 			
 			controllers : [
-				'Yamma.controller.header.OpenSearchController',
+				'header.OpenSearchController',
 				'menus.AdvancedSearchMenuController',
 				
 				'mails.MailsViewController',

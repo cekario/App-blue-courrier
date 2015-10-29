@@ -131,6 +131,10 @@
 	padding-top: 5px;
 }
 
+.x-grid-cell .document-subject .reference {
+	font-weight:bold;
+}
+
 .x-grid-cell .document-subject .privacy-extra-cls {
 	background-repeat: no-repeat; 
 	background-position: left center;

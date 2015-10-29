@@ -242,7 +242,7 @@ Ext.define('Yamma.controller.display.DisplayViewController',{
 			tabConfig : {
 				title : title,
 				context : documentRecord,
-				iconCls : Yamma.Constants.DOCUMENT_TYPE_DEFINITIONS[kind].iconCls,
+				iconCls : Yamma.Constants.DOCUMENT_TYPE_DEFINITIONS[kind].iconCls
 //				editMetaDataHandler : this.onMainDocumentMetaDataEdited
 			},
 			setActive : true

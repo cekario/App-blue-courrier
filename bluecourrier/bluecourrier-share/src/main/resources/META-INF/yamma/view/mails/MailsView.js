@@ -138,8 +138,9 @@ Ext.define('Yamma.view.mails.MailsView', {
 	    	itemId : 'sorters-menu',
 	        sorters : [
         	   {"property":"", "text": "Aucun", "iconCls" : Yamma.Constants.getIconDefinition('cancel').iconCls},
+        	   {"property":"@bluecourrier:reference", "text":"Référence", "iconCls" : Yamma.view.mails.SortersMenu.KEY_TYPE_ICON.iconCls},
         	   {"property":"@cm:name", "text":"Nom", "iconCls" : Yamma.view.mails.SortersMenu.TEXT_TYPE_ICON.iconCls},
-        	   {"property":"@cm:title", "text":"Titre", "iconCls" : Yamma.view.mails.SortersMenu.TEXT_TYPE_ICON.iconCls},
+        	   {"property":"@bluecourrier:object", "text":"Objet", "iconCls" : Yamma.view.mails.SortersMenu.TEXT_TYPE_ICON.iconCls},
         	   {"property":"@cm:created", "text":"Création", "iconCls" : Yamma.view.mails.SortersMenu.DATE_TYPE_ICON.iconCls},
         	   {"property":"@cm:modified", "text":"Modification", "iconCls" : Yamma.view.mails.SortersMenu.DATE_TYPE_ICON.iconCls},
         	   {"property":"@bluecourrier:deliveryDate", "text":"Arrivée", "iconCls" : Yamma.view.mails.SortersMenu.DATE_TYPE_ICON.iconCls},

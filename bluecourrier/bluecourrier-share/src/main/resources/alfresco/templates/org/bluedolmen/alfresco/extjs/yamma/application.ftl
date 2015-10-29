@@ -30,8 +30,12 @@
 		i18n.init(options);
 		
 	</script>
-	
+
+    <#if DEBUG>	
 	<script type="text/javascript" src="/extjs/ext-dev.js"></script>
+	<#else>
+	<script type="text/javascript" src="/extjs/ext-all.js"></script>
+	</#if>
 	<script type="text/javascript" src="/extjs/locale/ext-lang-${lang!"fr"}.js"></script>
 	<script type="text/javascript" src="${url.context}/res/yamma/app.js"></script>
 	

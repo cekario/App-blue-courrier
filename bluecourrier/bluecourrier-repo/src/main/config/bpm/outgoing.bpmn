@@ -57,13 +57,23 @@
         </activiti:taskListener>
         
         <activiti:taskListener event="create" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+          <activiti:field name="runAs"><activiti:string>admin</activiti:string></activiti:field>
           <activiti:field name="script">
             <activiti:string>
             <![CDATA[<import resource="classpath:${config.target.path}/scripts/outgoing/set-document-state.js">]]>
             </activiti:string>
           </activiti:field>
-        </activiti:taskListener>        
-
+        </activiti:taskListener>
+        
+        <activiti:taskListener event="assignment" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+		  <activiti:field name="runAs"><activiti:string>admin</activiti:string></activiti:field>
+          <activiti:field name="script">
+            <activiti:string>
+            <![CDATA[<import resource="classpath:${config.target.path}/scripts/outgoing/on-instructor-assignment.js">]]>
+            </activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+        
         <activiti:taskListener event="complete" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
           <activiti:field name="script">
             <activiti:string>
@@ -150,6 +160,7 @@
         </activiti:taskListener>
         
         <activiti:taskListener event="create" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+          <activiti:field name="runAs"><activiti:string>admin</activiti:string></activiti:field>
           <activiti:field name="script">
             <activiti:string>
             <![CDATA[<import resource="classpath:${config.target.path}/scripts/outgoing/set-document-state.js">]]>
@@ -225,7 +236,7 @@
     
     <sequenceFlow id="certify" sourceRef="checkForCertification" targetRef="certifyingTask" >
       <conditionExpression xsi:type="tFormalExpression">
-      <![CDATA[${bcogwf_needsCertification == 'always' || (bcogwf_needsCertification != 'never' && bcogwf_processingOutcome == 'Certify')}]]>
+      <![CDATA[${bcogwf_needsCertification == 'always' || (bcogwf_needsCertification != 'never' && !empty bcogwf_signingActor)}]]>
       </conditionExpression>    
     </sequenceFlow>
     
@@ -251,12 +262,13 @@
         <activiti:taskListener event="create" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
           <activiti:field name="script">
             <activiti:string>
-            <![CDATA[<import resource="classpath:${config.target.path}/scripts/outgoing/assign-to-service-instructor.js">]]>
+            <![CDATA[<import resource="classpath:${config.target.path}/scripts/outgoing/assign-to-certifying-actor.js">]]>
             </activiti:string>
           </activiti:field>
         </activiti:taskListener>
         
         <activiti:taskListener event="create" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+          <activiti:field name="runAs"><activiti:string>admin</activiti:string></activiti:field>
           <activiti:field name="script">
             <activiti:string>
             <![CDATA[<import resource="classpath:${config.target.path}/scripts/outgoing/set-document-state.js">]]>
@@ -291,11 +303,27 @@
     
     <sequenceFlow id="certified" name="Certified" sourceRef="certifyingDecision" targetRef="sendingTask">
       <conditionExpression xsi:type="tFormalExpression">
-      <![CDATA[${bcogwf_certifyingOutcome == 'Certify'}]]>
+      <![CDATA[${bcogwf_certifyingOutcome == 'Certify' and empty bcogwf_signingActor}]]>
+      </conditionExpression>
+    </sequenceFlow>
+
+    <sequenceFlow id="nextSigningStep" name="Next Signing Step" sourceRef="certifyingDecision" targetRef="certifyingTask">
+      <conditionExpression xsi:type="tFormalExpression">
+      <![CDATA[${bcogwf_certifyingOutcome == 'Certify' and !(empty bcogwf_signingActor)}]]>
       </conditionExpression>
     </sequenceFlow>
     
     <sequenceFlow id="reject" name="Reject" sourceRef="certifyingDecision" targetRef="processingTask">
+      <extensionElements>
+        <activiti:executionListener event="take" class="org.alfresco.repo.workflow.activiti.listener.ScriptExecutionListener">
+          <activiti:field name="runAs"><activiti:string>admin</activiti:string></activiti:field>
+          <activiti:field name="script">
+            <activiti:string>
+            <![CDATA[<import resource="classpath:${config.target.path}/scripts/outgoing/on-reject-certification.js">]]>
+            </activiti:string>
+          </activiti:field>
+        </activiti:executionListener>
+      </extensionElements>     
       <conditionExpression xsi:type="tFormalExpression">
       <![CDATA[${bcogwf_certifyingOutcome == 'Reject'}]]>
       </conditionExpression>
@@ -334,6 +362,7 @@
         </activiti:taskListener>
         
         <activiti:taskListener event="create" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+          <activiti:field name="runAs"><activiti:string>admin</activiti:string></activiti:field>
           <activiti:field name="script">
             <activiti:string>
             <![CDATA[<import resource="classpath:${config.target.path}/scripts/outgoing/set-document-state.js">]]>
@@ -361,8 +390,8 @@
       
     </userTask>
     
-    <sequenceFlow id="toEndProcessed" sourceRef="sendingTask" targetRef="endProcessed" >
-    </sequenceFlow>
+    <sequenceFlow id="toEndProcessed" sourceRef="sendingTask" targetRef="endProcessed" ></sequenceFlow>
+    
     
     
     <endEvent id="endProcessed" name="Processed">

@@ -9,6 +9,8 @@
 	
 	// Clean-up residual properties
 	bdNodeUtils.removeProperty(document, 'bcinwf:lastProcessingServiceChange');
+	
+	// May be useful for workflow restart if no other option is available
 	bdNodeUtils.removeProperty(document, 'bcinwf:instructorUserName');
 	
 })();

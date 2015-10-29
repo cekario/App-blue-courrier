@@ -7,7 +7,7 @@ import org.springframework.extensions.webscripts.DeclarativeWebScript;
 import org.springframework.extensions.webscripts.WebScriptRequest;
 import org.springframework.extensions.webscripts.WebScriptResponse;
 
-public class CirculatePost extends DeclarativeWebScript {
+public class IncomingWorkflowDeclarativeWebscript extends DeclarativeWebScript {
 	
 	
 	private IncomingWorkflowHelper incomingWorkflowHelper;

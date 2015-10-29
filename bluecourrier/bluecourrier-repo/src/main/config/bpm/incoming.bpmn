@@ -74,6 +74,7 @@
         </activiti:taskListener>
         
         <activiti:taskListener event="create" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+          <activiti:field name="runAs"><activiti:string>admin</activiti:string></activiti:field>
           <activiti:field name="script">
             <activiti:string>
             <![CDATA[<import resource="classpath:${config.target.path}/scripts/incoming/set-document-state.js">]]>
@@ -140,7 +141,7 @@
         </activiti:executionListener>
       </extensionElements> 
       <conditionExpression xsi:type="tFormalExpression">
-      <![CDATA[${!empty serviceAndRole}]]>
+      <![CDATA[${!empty serviceAndRole || (bcinwf_startingMode == 'delivering')}]]>
       </conditionExpression>
     </sequenceFlow>
 
@@ -214,6 +215,7 @@
       <extensionElements>
       
         <activiti:taskListener event="create" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+          <activiti:field name="runAs"><activiti:string>admin</activiti:string></activiti:field>
           <activiti:field name="script">
             <activiti:string>
             <![CDATA[<import resource="classpath:${config.target.path}/scripts/incoming/on-delivering-start.js">]]>
@@ -240,6 +242,7 @@
         </activiti:taskListener>
         
         <activiti:taskListener event="create" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+          <activiti:field name="runAs"><activiti:string>admin</activiti:string></activiti:field>
           <activiti:field name="script">
             <activiti:string>
             <![CDATA[<import resource="classpath:${config.target.path}/scripts/incoming/set-document-state.js">]]>
@@ -322,6 +325,7 @@
         </activiti:taskListener>
         
         <activiti:taskListener event="create" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+          <activiti:field name="runAs"><activiti:string>admin</activiti:string></activiti:field>
           <activiti:field name="script">
             <activiti:string>
             <![CDATA[<import resource="classpath:${config.target.path}/scripts/incoming/set-document-state.js">]]>
@@ -434,6 +438,7 @@
         </activiti:taskListener>
         
         <activiti:taskListener event="create" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+          <activiti:field name="runAs"><activiti:string>admin</activiti:string></activiti:field>
           <activiti:field name="script">
             <activiti:string>
             <![CDATA[<import resource="classpath:${config.target.path}/scripts/incoming/set-document-state.js">]]>

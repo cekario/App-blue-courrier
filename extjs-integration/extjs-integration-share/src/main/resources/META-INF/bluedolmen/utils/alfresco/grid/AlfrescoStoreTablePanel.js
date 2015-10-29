@@ -541,13 +541,13 @@ Ext.define('Bluedolmen.utils.alfresco.grid.AlfrescoStoreTablePanel', {
 		var 
 			me = this,
 			item_ = item,
-			view_ = view,
-			contextMenu = buildContextMenu()
+			view_ = view
 		;
 		
-		contextMenu.showAt(e.getXY());
+		// Retrieve the current-user information to provide as a context
+		Bluedolmen.Alfresco.getCurrentUser(buildContextMenu /* onPersonAvailable */);
 		
-		function buildContextMenu() {
+		function buildContextMenu(currentUser) {
 			
 			var items = [];
 			
@@ -560,10 +560,10 @@ Ext.define('Bluedolmen.utils.alfresco.grid.AlfrescoStoreTablePanel', {
 				
 				if (Ext.isFunction(action.init)) {
 					action.init(me);
-				}			
+				}
 				
 				action.setRecord(record);
-				if (Ext.isFunction(action.isAvailable) && !action.isAvailable(record)) return;
+				if (Ext.isFunction(action.isAvailable) && !action.isAvailable(record, currentUser)) return;
 				
 				action.setHandler( Ext.bind(action.execute, me, [record, item_, view_]) );
 				
@@ -577,7 +577,7 @@ Ext.define('Bluedolmen.utils.alfresco.grid.AlfrescoStoreTablePanel', {
 				})
 			;
 			
-			return menu;
+			menu.showAt(e.getXY());
 			
 		}
 		

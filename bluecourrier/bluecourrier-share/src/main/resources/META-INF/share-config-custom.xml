@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <alfresco-config>
-    <config replace="false" evaluator="string-compare" condition="AdvancedSearch">
-		<advanced-search>
-			<forms>
 
-				<form id="bluecourrier-mail-search" labelId="aspect.bluecourrier_mail"
-					descriptionId="search.form.desc.bluecourrier_mail">cm:content</form>
-			</forms>
-		</advanced-search>
-	</config>
-	
 	<config>
 		<forms>
 			<dependencies>
@@ -130,318 +121,6 @@
 			
 			</form>
 			
-			<form id="bluecourrier-mail-search">
-				
-				<edit-form template="/fdk/templates/tab-edit-form.ftl" />
-				<create-form template="/fdk/templates/tab-edit-form.ftl" />
-				<view-form template="/fdk/templates/tab-edit-form.ftl" />
-
-				<field-visibility>
-					<show id="bluecourrier:reference" force="true" />
-					<show id="bluecourrier:object" force="true" />
-					<show id="bluecourrier:deliveryDate" force="true" />
-					<show id="bluecourrier:writingDate" force="true" />
-					<show id="bluecourrier:sentDate" force="true" />
-					<show id="bluecourrier:Statusable_state" force="true" />
-					<show id="cm:categories" force="true" />
-					<show id="bluecourrier:senderOrganizationName" force="true" />
-					<show id="bluecourrier:senderInstructorName" force="true" />
-					<show id="bluecourrier:senderInstructorJobTitle" force="true" />
-					<show id="bluecourrier:senderInstructorEmail" force="true" />
-					<show id="bluecourrier:senderInstructorTelephone" force="true" />
-					<show id="bluecourrier:senderInstructorMobile" force="true" />
-					<show id="bluecourrier:senderSignatorName" force="true" />
-					<show id="bluecourrier:senderSignatorJobTitle" force="true" />
-					<show id="bluecourrier:senderSignatorEmail" force="true" />
-					<show id="bluecourrier:senderSignatorTelephone" force="true" />
-					<show id="bluecourrier:senderSignatorMobile" force="true" />
-					<show id="bluecourrier:senderAddress" force="true" />
-					<show id="bluecourrier:senderPostcode" force="true" />
-					<show id="bluecourrier:senderCity" force="true" />
-					<show id="bluecourrier:senderCountry" force="true" />
-					<show id="bluecourrier:senderEmail" force="true" />
-					<show id="bluecourrier:senderTelephone" force="true" />
-					<show id="bluecourrier:recipientOrganizationName" force="true" />
-					<show id="bluecourrier:recipientName" force="true" />
-					<show id="bluecourrier:recipientJobTitle" force="true" />
-					<show id="bluecourrier:recipientAddress" force="true" />
-					<show id="bluecourrier:recipientPostcode" force="true" />
-					<show id="bluecourrier:recipientCity" force="true" />
-					<show id="bluecourrier:recipientCountry" force="true" />
-					<show id="bluecourrier:recipientEmail" force="true" />
-					<show id="bluecourrier:recipientTelephone" force="true" />
-				</field-visibility>
-				
-				<appearance>
-				
-					<set id="search.Mail_Search.Mail" label-id="form.set.label.mail.mail" />
-
-					<set id="search.Mail_Search.Sender" label-id="form.set.label.mail.Sender" />
-
-					<set id="search.Mail_Search.Recipient" 
-						appearance="title"
-						label-id="form.set.label.mail.Recipient" />
-
-					<set id="search.Mail_Search.Mail.Identification" 
-						appearance="title"
-						label-id="form.set.label.mail.default.Identification"
-						parent="search.Mail_Search.Mail" />
-
-					<field id="bluecourrier:reference" set="search.Mail_Search.Mail.Identification">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:object" set="search.Mail_Search.Mail.Identification">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<set id="search.Mail_Search.Mail.Dates" 
-						appearance="title"
-						template="/org/alfresco/components/form/2-column-set.ftl"
-						label-id="form.set.label.mail.default.Dates" 
-						parent="search.Mail_Search.Mail" />
-
-					<field id="bluecourrier:deliveryDate" set="search.Mail_Search.Mail.Dates">
-						<control template="/org/alfresco/components/form/controls/daterange.ftl">
-							<control-param name="forceEditable">true</control-param>
-							<control-param name="search">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:writingDate" set="search.Mail_Search.Mail.Dates">
-						<control template="/org/alfresco/components/form/controls/daterange.ftl">
-							<control-param name="forceEditable">true</control-param>
-							<control-param name="search">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:sentDate" set="search.Mail_Search.Mail.Dates">
-						<control template="/org/alfresco/components/form/controls/daterange.ftl">
-							<control-param name="forceEditable">true</control-param>
-							<control-param name="search">true</control-param>
-						</control>
-					</field>
-					
-					<set id="search.Mail_Search.Mail.System" 
-						appearance="title"
-						label-id="form.set.label.mail.default.System" 
-						parent="search.Mail_Search.Mail" />
-
-					<field id="bluecourrier:Statusable_state" set="search.Mail_Search.Mail.System">
-						<control template="/org/alfresco/components/form/controls/selectmany.ftl">
-							<control-param name="forceEditable">true</control-param>
-							<control-param name="search">true</control-param>
-						</control>
-					</field>
-					
-					<set id="search.Mail_Search.Mail.Classification" 
-						appearance="title"
-						label-id="form.set.label.mail.default.Classification"
-						parent="search.Mail_Search.Mail" />
-
-					<field id="cm:categories" set="search.Mail_Search.Mail.Classification">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<set id="search.Mail_Search.Sender.organization" 
-						appearance="title"
-						label-id="form.set.label.mail.Sender.organization"
-						parent="search.Mail_Search.Sender" />
-
-					<field id="bluecourrier:senderOrganizationName" set="search.Mail_Search.Sender.organization">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<set id="search.Mail_Search.Sender.instructor" 
-						appearance="title"
-						label-id="form.set.label.mail.Sender.instructor"
-						parent="search.Mail_Search.Sender" />
-
-					<field id="bluecourrier:senderInstructorName" set="search.Mail_Search.Sender.instructor">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:senderInstructorJobTitle" set="search.Mail_Search.Sender.instructor">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:senderInstructorEmail" set="search.Mail_Search.Sender.instructor">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:senderInstructorTelephone" set="search.Mail_Search.Sender.instructor">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:senderInstructorMobile" set="search.Mail_Search.Sender.instructor">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<set id="search.Mail_Search.Sender.signator" 
-						appearance="title"
-						label-id="form.set.label.mail.Sender.signator"
-						parent="search.Mail_Search.Sender" />
-
-					<field id="bluecourrier:senderSignatorName" set="search.Mail_Search.Sender.signator">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:senderSignatorJobTitle" set="search.Mail_Search.Sender.signator">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:senderSignatorEmail" set="search.Mail_Search.Sender.signator">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:senderSignatorTelephone" set="search.Mail_Search.Sender.signator">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:senderSignatorMobile" set="search.Mail_Search.Sender.signator">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<set id="search.Mail_Search.Sender.contactDetails" 
-						appearance="title"
-						label-id="form.set.label.mail.Sender.contactDetails"
-						parent="search.Mail_Search.Sender" />
-
-					<field id="bluecourrier:senderAddress" set="search.Mail_Search.Sender.contactDetails">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:senderPostcode" set="search.Mail_Search.Sender.contactDetails">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:senderCity" set="search.Mail_Search.Sender.contactDetails">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:senderCountry" set="search.Mail_Search.Sender.contactDetails">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:senderEmail" set="search.Mail_Search.Sender.contactDetails">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:senderTelephone" set="search.Mail_Search.Sender.contactDetails">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<set id="search.Mail_Search.Recipient.organization" 
-						appearance="title"
-						label-id="form.set.label.mail.Recipient.organization"
-						parent="search.Mail_Search.Recipient" />
-
-					<field id="bluecourrier:recipientOrganizationName" set="search.Mail_Search.Recipient.organization">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<set id="search.Mail_Search.Recipient.person" 
-						appearance="title"
-						label-id="form.set.label.mail.Recipient.person"
-						parent="search.Mail_Search.Recipient" />
-
-					<field id="bluecourrier:recipientName" set="search.Mail_Search.Recipient.person">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:recipientJobTitle" set="search.Mail_Search.Recipient.person">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<set id="search.Mail_Search.Recipient.contactDetails"
-						appearance="title"
-						label-id="form.set.label.mail.Recipient.contactDetails"
-						parent="search.Mail_Search.Recipient" />
-
-					<field id="bluecourrier:recipientAddress" set="search.Mail_Search.Recipient.contactDetails">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:recipientPostcode" set="search.Mail_Search.Recipient.contactDetails">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:recipientCity" set="search.Mail_Search.Recipient.contactDetails">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:recipientCountry" set="search.Mail_Search.Recipient.contactDetails">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:recipientEmail" set="search.Mail_Search.Recipient.contactDetails">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-					
-					<field id="bluecourrier:recipientTelephone" set="search.Mail_Search.Recipient.contactDetails">
-						<control>
-							<control-param name="forceEditable">true</control-param>
-						</control>
-					</field>
-
-				</appearance>
-			</form>
 		</forms>
 		
 	</config>
@@ -787,6 +466,327 @@
 			
 		</forms>
 	</config>
+
+	
+	<!-- bluecourrier:Mail SEARCH -->
+	<config evaluator="model-type" condition="bluecourrier:Mail">
+		<forms>
+			<form id="search">
+				
+				<edit-form template="/fdk/templates/tab-edit-form.ftl" />
+				<create-form template="/fdk/templates/tab-edit-form.ftl" />
+				<view-form template="/fdk/templates/tab-edit-form.ftl" />
+
+				<field-visibility>
+					<show id="bluecourrier:reference" force="true" />
+					<show id="bluecourrier:object" force="true" />
+					<show id="bluecourrier:deliveryDate" force="true" />
+					<show id="bluecourrier:writingDate" force="true" />
+					<show id="bluecourrier:sentDate" force="true" />
+					<show id="bluecourrier:Statusable_state" force="true" />
+					<show id="cm:categories" force="true" />
+					<show id="bluecourrier:senderOrganizationName" force="true" />
+					<show id="bluecourrier:senderInstructorName" force="true" />
+					<show id="bluecourrier:senderInstructorJobTitle" force="true" />
+					<show id="bluecourrier:senderInstructorEmail" force="true" />
+					<show id="bluecourrier:senderInstructorTelephone" force="true" />
+					<show id="bluecourrier:senderInstructorMobile" force="true" />
+					<show id="bluecourrier:senderSignatorName" force="true" />
+					<show id="bluecourrier:senderSignatorJobTitle" force="true" />
+					<show id="bluecourrier:senderSignatorEmail" force="true" />
+					<show id="bluecourrier:senderSignatorTelephone" force="true" />
+					<show id="bluecourrier:senderSignatorMobile" force="true" />
+					<show id="bluecourrier:senderAddress" force="true" />
+					<show id="bluecourrier:senderPostcode" force="true" />
+					<show id="bluecourrier:senderCity" force="true" />
+					<show id="bluecourrier:senderCountry" force="true" />
+					<show id="bluecourrier:senderEmail" force="true" />
+					<show id="bluecourrier:senderTelephone" force="true" />
+					<show id="bluecourrier:recipientOrganizationName" force="true" />
+					<show id="bluecourrier:recipientName" force="true" />
+					<show id="bluecourrier:recipientJobTitle" force="true" />
+					<show id="bluecourrier:recipientAddress" force="true" />
+					<show id="bluecourrier:recipientPostcode" force="true" />
+					<show id="bluecourrier:recipientCity" force="true" />
+					<show id="bluecourrier:recipientCountry" force="true" />
+					<show id="bluecourrier:recipientEmail" force="true" />
+					<show id="bluecourrier:recipientTelephone" force="true" />
+				</field-visibility>
+				
+				<appearance>
+				
+					<set id="search.Mail_Search.Mail" label-id="form.set.label.search.Mail_Search.Mail" />
+
+					<set id="search.Mail_Search.Sender" label-id="form.set.label.search.Mail_Search.Sender" />
+
+					<set id="search.Mail_Search.Recipient" 
+						appearance="title"
+						label-id="form.set.label.search.Mail_Search.Recipient" />
+
+					<set id="search.Mail_Search.Mail.Identification" 
+						appearance="title"
+						label-id="form.set.label.search.Mail_Search.Mail.Identification"
+						parent="search.Mail_Search.Mail" />
+
+					<field id="bluecourrier:reference" set="search.Mail_Search.Mail.Identification">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:object" set="search.Mail_Search.Mail.Identification">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<set id="search.Mail_Search.Mail.Dates" 
+						appearance="title"
+						template="/org/alfresco/components/form/2-column-set.ftl"
+						label-id="form.set.label.search.Mail_Search.Mail.Dates" 
+						parent="search.Mail_Search.Mail" />
+
+					<field id="bluecourrier:deliveryDate" set="search.Mail_Search.Mail.Dates">
+						<control template="/org/alfresco/components/form/controls/daterange.ftl">
+							<control-param name="forceEditable">true</control-param>
+							<control-param name="search">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:writingDate" set="search.Mail_Search.Mail.Dates">
+						<control template="/org/alfresco/components/form/controls/daterange.ftl">
+							<control-param name="forceEditable">true</control-param>
+							<control-param name="search">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:sentDate" set="search.Mail_Search.Mail.Dates">
+						<control template="/org/alfresco/components/form/controls/daterange.ftl">
+							<control-param name="forceEditable">true</control-param>
+							<control-param name="search">true</control-param>
+						</control>
+					</field>
+					
+					<set id="search.Mail_Search.Mail.System" 
+						appearance="title"
+						label-id="form.set.label.search.Mail_Search.Mail.System" 
+						parent="search.Mail_Search.Mail" />
+
+					<field id="bluecourrier:Statusable_state" set="search.Mail_Search.Mail.System">
+						<control template="/org/alfresco/components/form/controls/selectmany.ftl">
+							<control-param name="forceEditable">true</control-param>
+							<control-param name="search">true</control-param>
+						</control>
+					</field>
+					
+					<set id="search.Mail_Search.Mail.Classification" 
+						appearance="title"
+						label-id="form.set.label.search.Mail_Search.Mail.Classification"
+						parent="search.Mail_Search.Mail" />
+
+					<field id="cm:categories" set="search.Mail_Search.Mail.Classification">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<set id="search.Mail_Search.Sender.organization" 
+						appearance="title"
+						label-id="form.set.label.search.Mail_Search.Sender.organization"
+						parent="search.Mail_Search.Sender" />
+
+					<field id="bluecourrier:senderOrganizationName" set="search.Mail_Search.Sender.organization">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<set id="search.Mail_Search.Sender.instructor" 
+						appearance="title"
+						label-id="form.set.label.search.Mail_Search.Sender.instructor"
+						parent="search.Mail_Search.Sender" />
+
+					<field id="bluecourrier:senderInstructorName" set="search.Mail_Search.Sender.instructor">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:senderInstructorJobTitle" set="search.Mail_Search.Sender.instructor">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:senderInstructorEmail" set="search.Mail_Search.Sender.instructor">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:senderInstructorTelephone" set="search.Mail_Search.Sender.instructor">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:senderInstructorMobile" set="search.Mail_Search.Sender.instructor">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<set id="search.Mail_Search.Sender.signator" 
+						appearance="title"
+						label-id="form.set.label.search.Mail_Search.Sender.signator"
+						parent="search.Mail_Search.Sender" />
+
+					<field id="bluecourrier:senderSignatorName" set="search.Mail_Search.Sender.signator">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:senderSignatorJobTitle" set="search.Mail_Search.Sender.signator">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:senderSignatorEmail" set="search.Mail_Search.Sender.signator">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:senderSignatorTelephone" set="search.Mail_Search.Sender.signator">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:senderSignatorMobile" set="search.Mail_Search.Sender.signator">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<set id="search.Mail_Search.Sender.contactDetails" 
+						appearance="title"
+						label-id="form.set.label.search.Mail_Search.Sender.contactDetails"
+						parent="search.Mail_Search.Sender" />
+
+					<field id="bluecourrier:senderAddress" set="search.Mail_Search.Sender.contactDetails">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:senderPostcode" set="search.Mail_Search.Sender.contactDetails">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:senderCity" set="search.Mail_Search.Sender.contactDetails">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:senderCountry" set="search.Mail_Search.Sender.contactDetails">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:senderEmail" set="search.Mail_Search.Sender.contactDetails">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:senderTelephone" set="search.Mail_Search.Sender.contactDetails">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<set id="search.Mail_Search.Recipient.organization" 
+						appearance="title"
+						label-id="form.set.label.search.Mail_Search.Recipient.organization"
+						parent="search.Mail_Search.Recipient" />
+
+					<field id="bluecourrier:recipientOrganizationName" set="search.Mail_Search.Recipient.organization">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<set id="search.Mail_Search.Recipient.person" 
+						appearance="title"
+						label-id="form.set.label.search.Mail_Search.Recipient.person"
+						parent="search.Mail_Search.Recipient" />
+
+					<field id="bluecourrier:recipientName" set="search.Mail_Search.Recipient.person">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:recipientJobTitle" set="search.Mail_Search.Recipient.person">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<set id="search.Mail_Search.Recipient.contactDetails"
+						appearance="title"
+						label-id="form.set.label.search.Mail_Search.Recipient.contactDetails"
+						parent="search.Mail_Search.Recipient" />
+
+					<field id="bluecourrier:recipientAddress" set="search.Mail_Search.Recipient.contactDetails">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:recipientPostcode" set="search.Mail_Search.Recipient.contactDetails">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:recipientCity" set="search.Mail_Search.Recipient.contactDetails">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:recipientCountry" set="search.Mail_Search.Recipient.contactDetails">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:recipientEmail" set="search.Mail_Search.Recipient.contactDetails">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+					
+					<field id="bluecourrier:recipientTelephone" set="search.Mail_Search.Recipient.contactDetails">
+						<control>
+							<control-param name="forceEditable">true</control-param>
+						</control>
+					</field>
+
+				</appearance>
+			</form>
+			
+		</forms>
+	</config>
+	
 	
 	<config evaluator="model-type" condition="bluecourrier:privacyLevelItem">
 		<forms>
