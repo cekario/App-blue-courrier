@@ -49,13 +49,17 @@ cp extjs.zip ${TARGET_DIR}/artifacts
 
 echo "Retrieve alfresco-mmt from maven (version ${ALFRESCO_VERSION}"
 cd ${TARGET_DIR}
-mvn dependency:get -Dartifact=org.alfresco:alfresco-mmt:${ALFRESCO_VERSION}:jar: -DrepoUrl=https://artifacts.alfresco.com/nexus/content/groups/public/ -Ddest=alfresco-mmt.jar
-
+#mvn dependency:get -Dartifact=org.alfresco:alfresco-mmt:${ALFRESCO_VERSION}:jar: -DrepoUrl=https://artifacts.alfresco.com/nexus/content/groups/public/ -Ddest=alfresco-mmt.jar
+wget https://artifacts.alfresco.com/nexus/content/groups/public/org/alfresco/alfresco-mmt/5.0.d/alfresco-mmt-5.0.d.jar
+mv alfresco-mmt-5.0.d.jar alfresco-mmt.jat
 echo "Retrieve alfresco and share war from maven (version ${ALFRESCO_VERSION}"
 cd ${TARGET_DIR}/war
-mvn dependency:get -Dartifact=org.alfresco:alfresco:${ALFRESCO_VERSION}:war: -DrepoUrl=https://artifacts.alfresco.com/nexus/content/groups/public/ -Ddest=alfresco.war
-mvn dependency:get -Dartifact=org.alfresco:share:${ALFRESCO_VERSION}:war: -DrepoUrl=https://artifacts.alfresco.com/nexus/content/groups/public/ -Ddest=share.war
-
+#mvn dependency:get -Dartifact=org.alfresco:alfresco:${ALFRESCO_VERSION}:war: -DrepoUrl=https://artifacts.alfresco.com/nexus/content/groups/public/ -Ddest=alfresco.war
+wget https://artifacts.alfresco.com/nexus/content/groups/public/org/alfresco/alfresco/5.0.d/alfresco-5.0.d.war
+mv alfresco-5.0.d.war alfresco.war
+#mvn dependency:get -Dartifact=org.alfresco:share:${ALFRESCO_VERSION}:war: -DrepoUrl=https://artifacts.alfresco.com/nexus/content/groups/public/ -Ddest=share.war
+wget https://artifacts.alfresco.com/nexus/content/groups/public/org/alfresco/share/5.0.d/share-5.0.d.war
+mv share-5.0.d.war share.war
 echo "Building share.war"
 mkdir -p share/WEB-INF/lib
 cp ${TARGET_DIR}/artifacts/bluecourrier-share-*.jar share/WEB-INF/lib
