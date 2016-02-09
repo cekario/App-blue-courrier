@@ -65,9 +65,9 @@ jar -uf ../share.war WEB-INF/lib/*
 
 echo "Building alfresco.war"
 cd ${TARGET_DIR}/war
-java -jar ${TARGET_DIR}/alfresco-mmt.jar install ${TARGET_DIR}/artifacts/alfresco-extensions-*.amp alfresco.war -nobackup
+java -jar alfresco-mmt.jar install ${TARGET_DIR}/artifacts/alfresco-extensions-*.amp alfresco.war -nobackup
 cd ${TARGET_DIR}/war
-java -jar ${TARGET_DIR}/alfresco-mmt.jar install ${TARGET_DIR}/artifacts/bluecourrier-repo-*.amp alfresco.war -nobackup
+java -jar alfresco-mmt.jar install ${TARGET_DIR}/artifacts/bluecourrier-repo-*.amp alfresco.war -nobackup
 
 cd ${ROOT_DIR}
 if [ -d "${TARGET_DIR}/war/share" ]; then
