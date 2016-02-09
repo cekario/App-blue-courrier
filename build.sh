@@ -51,7 +51,7 @@ echo "Retrieve alfresco-mmt from maven (version ${ALFRESCO_VERSION}"
 cd ${TARGET_DIR}
 #mvn dependency:get -Dartifact=org.alfresco:alfresco-mmt:${ALFRESCO_VERSION}:jar: -DrepoUrl=https://artifacts.alfresco.com/nexus/content/groups/public/ -Ddest=alfresco-mmt.jar
 wget https://artifacts.alfresco.com/nexus/content/groups/public/org/alfresco/alfresco-mmt/5.0.d/alfresco-mmt-5.0.d.jar
-mv alfresco-mmt-5.0.d.jar alfresco-mmt.jat
+mv alfresco-mmt-5.0.d.jar alfresco-mmt.jar
 echo "Retrieve alfresco and share war from maven (version ${ALFRESCO_VERSION}"
 cd ${TARGET_DIR}/war
 #mvn dependency:get -Dartifact=org.alfresco:alfresco:${ALFRESCO_VERSION}:war: -DrepoUrl=https://artifacts.alfresco.com/nexus/content/groups/public/ -Ddest=alfresco.war
@@ -69,9 +69,9 @@ jar -uf ../share.war WEB-INF/lib/*
 
 echo "Building alfresco.war"
 cd ${TARGET_DIR}/war
-java -jar alfresco-mmt.jar install ${TARGET_DIR}/artifacts/alfresco-extensions-*.amp alfresco.war -nobackup
+java -jar ${TARGET_DIR}/alfresco-mmt.jar install ${TARGET_DIR}/artifacts/alfresco-extensions-*.amp alfresco.war -nobackup
 cd ${TARGET_DIR}/war
-java -jar alfresco-mmt.jar install ${TARGET_DIR}/artifacts/bluecourrier-repo-*.amp alfresco.war -nobackup
+java -jar ${TARGET_DIR}/alfresco-mmt.jar install ${TARGET_DIR}/artifacts/bluecourrier-repo-*.amp alfresco.war -nobackup
 
 cd ${ROOT_DIR}
 if [ -d "${TARGET_DIR}/war/share" ]; then
